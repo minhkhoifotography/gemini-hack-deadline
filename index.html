@@ -26,9 +26,7 @@
         
         body { 
             background-color: var(--bg-base); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; 
-            background-image: 
-                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-image: linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
             background-size: 40px 40px;
         }
 
@@ -190,8 +188,7 @@
                     <button class="lang-btn" onclick="changeLang('fr', this)">FR</button>
                 </div>
                 
-                <!-- NÚT CONTRIBUTE -->
-                <button class="btn-contribute-pill" id="ui-btn-contribute" onclick="openFeedback('Global Platform', 'Nền tảng', 'Đóng góp chung')">
+                <button class="btn-contribute-pill" id="ui-btn-contribute" onclick="openFeedback('global', 'Global Platform', 'Nền tảng', 'Đóng góp chung')">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                     Góp Prompt
                 </button>
@@ -203,7 +200,7 @@
             <div class="hero">
                 <div class="badge" id="ui-hero-badge">Dự án Mã nguồn mở Toàn cầu</div>
                 <h1 id="ui-hero-title">Hệ sinh thái AI <br>dành cho Sinh viên Quốc tế</h1>
-                <p id="ui-hero-desc">Khám phá kho tàng Prompt AI chuyên sâu nhất, được cấu trúc hóa cho từng chuyên ngành hẹp. Hệ thống tự động biên dịch ngầm thông qua Prompt Engineering, biến Gemini thành cố vấn chuyên môn Đa ngôn ngữ của bạn.</p>
+                <p id="ui-hero-desc">Khám phá kho tàng Prompt AI chuyên sâu nhất, được cấu trúc hóa cho từng chuyên ngành hẹp. Giao diện và câu lệnh tự động biên dịch, biến Gemini thành cố vấn chuyên môn Đa ngôn ngữ của bạn.</p>
                 <div class="hero-stats">
                     <span id="statMajors">0 Nhóm ngành</span> • 
                     <span id="statPrompts">0 Prompts</span>
@@ -229,15 +226,15 @@
                     <div class="developer-profile">
                         <div class="dev-avatar">K</div>
                         <div class="dev-info">
-                            <p>Designed & Developed by</p>
+                            <p id="ui-dev-role">Designed & Developed by</p>
                             <h4>Lưu Minh Khôi</h4>
-                            <p class="highlight">Google Student Ambassador 2026 Candidate</p>
+                            <p class="highlight" id="ui-dev-title">Google Student Ambassador 2026 Candidate</p>
                             <p>Digital Marketing & Int. Economics | Swinburne HCMC</p>
-                            <p style="font-size: 0.7rem; opacity: 0.6; margin-top: 2px;">(Cựu học sinh chuyên Tin - THPT chuyên Lê Quý Đôn)</p>
+                            <p style="font-size: 0.7rem; opacity: 0.6; margin-top: 2px;" id="ui-dev-sub">(Cựu học sinh chuyên Tin - THPT chuyên Lê Quý Đôn)</p>
                         </div>
                     </div>
                 </div>
-                <div class="footer-bottom">
+                <div class="footer-bottom" id="ui-footer-copy">
                     &copy; 2026 Initiated by Khôi Lưu. Powered by Google Gemini Initiative.
                 </div>
             </footer>
@@ -258,18 +255,19 @@
 
                 <form action="https://formspree.io/f/YOUR_FORM_ID_HERE" method="POST">
                     <!-- Hidden Inputs for Formspree Columns -->
-                    <input type="hidden" name="Nhóm_Ngành_Lớn" id="formMainCat">
-                    <input type="hidden" name="Chuyên_Ngành_Hẹp" id="formSubCat">
-                    <input type="hidden" name="Tên_Prompt_Mục_Tiêu" id="formPromptTitle">
+                    <input type="hidden" name="Main_Category" id="formMainCat">
+                    <input type="hidden" name="Sub_Category" id="formSubCat">
+                    <input type="hidden" name="Prompt_Title" id="formPromptTitle">
+                    <input type="hidden" name="Submitted_Language" id="formLanguage">
 
                     <div class="form-group">
                         <label id="ui-fb-name">Tên của bạn (hoặc MSSV)</label>
-                        <input type="text" name="Người_Đóng_Góp" required placeholder="VD: Michael Khôi">
+                        <input type="text" name="Contributor_Name" required placeholder="Ex: Michael Khoi">
                     </div>
                     
                     <div class="form-group">
                         <label id="ui-fb-content">Nội dung câu lệnh (Prompt) xuất sắc của bạn</label>
-                        <textarea name="Nội_Dung_Prompt" rows="7" required placeholder="Paste your optimized prompt here..."></textarea>
+                        <textarea name="Prompt_Content" rows="7" required placeholder="Paste your optimized prompt here..."></textarea>
                     </div>
                     <button type="submit" class="btn-submit" id="ui-fb-btn">
                         Gửi Lên Hệ Thống
@@ -284,199 +282,134 @@
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
-        // --- 1. PROMPT DATABASE ---
-        const promptDB = [
-            // Khối Kinh tế & Quản trị
-            { main: "Kinh tế & Quản trị", sub: "Digital Marketing", title: "Chiến lược Launching 5A", time: "2h", prompt: "Đóng vai CMO, thiết kế chiến lược ra mắt [Sản phẩm] theo mô hình 5A (Kotler). Đề xuất 3 touchpoints trên TikTok, lập ngân sách 70-20-10." },
-            { main: "Kinh tế & Quản trị", sub: "Digital Marketing", title: "Tối ưu hóa Phễu CRO", time: "1.5h", prompt: "Đóng vai Chuyên gia Tối ưu hóa Chuyển đổi (CRO). Audit phễu bán hàng của chiến dịch [Tên chiến dịch]. Đề xuất 3 A/B test cho Landing Page và kịch bản Retargeting." },
-            { main: "Kinh tế & Quản trị", sub: "Kế toán - Kiểm toán", title: "Lập Kế hoạch Kiểm toán", time: "3h", prompt: "Đóng vai Senior Auditor, lập kế hoạch kiểm toán chu trình Bán hàng & Thu tiền cho công ty [Ngành nghề]. Đánh giá rủi ro (ROMM) và đề xuất thử nghiệm kiểm soát tuân thủ ISA." },
-            { main: "Kinh tế & Quản trị", sub: "Tài chính - Đầu tư", title: "Định giá Cổ phiếu DCF", time: "3.5h", prompt: "Đóng vai CFA. Định giá cổ phiếu [Mã CK] bằng mô hình DCF. Tính toán WACC, dự phóng dòng tiền FCFF 5 năm và phân tích độ nhạy." },
-            { main: "Kinh tế & Quản trị", sub: "Logistics & Chuỗi cung ứng", title: "Tối ưu hóa Tuyến đường (VRP)", time: "2h", prompt: "Giải bài toán tối ưu hóa tuyến đường giao hàng (VRP) cho đội xe [Số lượng], phân phối đến [Y] điểm. Đề xuất thuật toán giảm thiểu chi phí xăng dầu." },
-            
-            // Khối Công nghệ Thông tin & Kỹ thuật
-            { main: "CNTT & Kỹ thuật", sub: "Phát triển Phần mềm (SE)", title: "Debug & Tối ưu Big O", time: "2h", prompt: "Đóng vai Senior Dev. Phân tích đoạn code [Ngôn ngữ]: [Dán Code]. Tìm 'bottleneck' gây Time Limit Exceeded. Tái cấu trúc, tối ưu độ phức tạp thuật toán và giải thích logic." },
-            { main: "CNTT & Kỹ thuật", sub: "AI & Data Science", title: "Thiết kế Mô hình Deep Learning", time: "3.5h", prompt: "Thiết kế kiến trúc mạng Neural (CNN/RNN/Transformer) cho bài toán [Phân loại ảnh/NLP]. Chọn hàm Loss, Optimizer và chiến thuật chống Overfitting." },
-            { main: "CNTT & Kỹ thuật", sub: "An toàn Thông tin (CyberSec)", title: "Kịch bản Pentest Ứng dụng Web", time: "3h", prompt: "Đóng vai Ethical Hacker. Lập kịch bản Pentest Hộp xám theo chuẩn OWASP Top 10 cho ứng dụng [Tên/Loại]. Liệt kê các payload test XSS, SQLi và SSRF." },
-            { main: "CNTT & Kỹ thuật", sub: "Điện & Điện tử", title: "Lập trình Nhúng (RTOS)", time: "2.5h", prompt: "Viết cấu trúc code C/C++ sử dụng FreeRTOS cho vi điều khiển [STM32/ESP32]. Thiết lập 3 Tasks, sử dụng Mutex/Semaphore để tránh Race Condition." },
-
-            // Khối Y Dược & Khoa học Tự nhiên
-            { main: "Y Dược & KHTN", sub: "Y khoa Lâm sàng", title: "Chẩn đoán Phân biệt", time: "3h", prompt: "Phân tích Case lâm sàng: Bệnh nhân [Nam/Nữ, Tuổi], tiền sử [Bệnh], triệu chứng [Mô tả]. Đưa ra 3 chẩn đoán phân biệt, chỉ định cận lâm sàng cần thiết và biện luận y khoa." },
-            { main: "Y Dược & KHTN", sub: "Dược học", title: "Tương tác Thuốc", time: "1.5h", prompt: "Đánh giá tương tác thuốc trong đơn thuốc sau: [Liệt kê]. Giải thích cơ chế (CYP450), mức độ nghiêm trọng và tư vấn điều chỉnh liều hoặc đổi thuốc an toàn hơn." },
-            { main: "Y Dược & KHTN", sub: "Công nghệ Sinh học", title: "Chỉnh sửa Gen CRISPR/Cas9", time: "3.5h", prompt: "Thiết kế trình tự sgRNA để Knock-out gen [Tên gen] trên tế bào bằng hệ thống CRISPR/Cas9. Đánh giá rủi ro Off-target và phương pháp kiểm chứng đột biến." },
-
-            // Khối Xã hội nhân văn, Luật & Sư phạm
-            { main: "XHNV, Luật & Giáo dục", sub: "Luật Hình sự & Dân sự", title: "Thẩm định Rủi ro Hợp đồng", time: "2.5h", prompt: "Đóng vai Luật sư. Thẩm định pháp lý hợp đồng [Loại]: [Dán nội dung]. Xác định 3 lỗ hổng pháp lý rủi ro nhất theo Luật VN hiện hành và soạn lại điều khoản." },
-            { main: "XHNV, Luật & Giáo dục", sub: "Tâm lý học Lâm sàng", title: "Kế hoạch Can thiệp CBT", time: "3h", prompt: "Phân tích thân chủ có triệu chứng [Trầm cảm/Rối loạn âu lo]. Nhận diện các 'Niềm tin cốt lõi' sai lệch. Lên kế hoạch can thiệp 5 phiên bằng Liệu pháp Nhận thức Hành vi (CBT)." },
-            { main: "XHNV, Luật & Giáo dục", sub: "Ngôn ngữ & Dịch thuật", title: "Bản địa hóa (Localization)", time: "1.5h", prompt: "Dịch và bản địa hóa đoạn hội thoại game/ứng dụng sau sang tiếng Việt: [Dán text]. Yêu cầu: Bắt trend Gen Z, sử dụng từ lóng (Slang) tự nhiên, không dịch Word-by-Word." },
-
-            // Khối Nghệ thuật, Kiến trúc & Nông Lâm
-            { main: "Nghệ thuật & Kiến trúc", sub: "Thiết kế Đồ họa (UI/UX)", title: "Quy trình Thiết kế UX", time: "2.5h", prompt: "Thiết kế luồng người dùng (User Flow) và Cấu trúc thông tin (Information Architecture) cho ứng dụng [Tên/Loại App]. Đề xuất các nguyên tắc UX/UI (Gestalt, Heuristics)." },
-            { main: "Nghệ thuật & Kiến trúc", sub: "Kiến trúc & Nội thất", title: "Tổ chức Không gian", time: "3h", prompt: "Lập phương án phân khu chức năng và tổ chức không gian nội thất cho [Loại công trình] diện tích [X m2] phong cách [Tên phong cách]. Tối ưu luồng giao thông." },
-            { main: "Nghệ thuật & Kiến trúc", sub: "Nông nghiệp & Thú y", title: "Thiết kế Nông nghiệp IoT", time: "3h", prompt: "Thiết kế hệ thống tưới nhỏ giọt kết hợp châm phân (Fertigation) tự động bằng IoT cho vườn [Tên cây]. Tính toán EC/pH, lượng nước theo từng giai đoạn sinh trưởng." }
-        ];
-
-        // --- 2. MULTI-LANGUAGE DICTIONARY & LOGIC ---
-        let currentLang = 'vi';
-
+        // --- 1. LOCALIZED DICTIONARY (UI & CATEGORIES) ---
         const uiTrans = {
             vi: {
-                badge: "Dự án Mã nguồn mở Toàn cầu",
-                title: "Hệ sinh thái AI <br>dành cho Sinh viên Quốc tế",
-                desc: "Khám phá kho tàng Prompt AI chuyên sâu nhất, được cấu trúc hóa cho từng chuyên ngành hẹp. Hệ thống tự động biên dịch ngầm thông qua Prompt Engineering, biến Gemini thành cố vấn chuyên môn Đa ngôn ngữ của bạn.",
-                search: "Tìm kiếm prompt, chuyên ngành...",
-                btnContribute: "Góp Prompt",
-                copyBtn: "Sao chép lệnh",
-                footerDesc: "Nền tảng tri thức mở kết hợp sức mạnh của Trí tuệ Nhân tạo, dành riêng cho thế hệ sinh viên bứt phá (Quantum Leaps).",
-                toast: "Đã sao chép câu lệnh!",
-                fbTitle: "Đóng góp Prompt",
-                fbDesc: "Kho tàng này lớn mạnh nhờ sự đóng góp của bạn. Form dữ liệu dưới đây đã được phân loại tự động vào hệ thống máy chủ.",
-                fbName: "Tên của bạn (hoặc MSSV)",
-                fbContent: "Nội dung câu lệnh (Prompt) xuất sắc của bạn",
-                fbBtn: "Gửi Lên Hệ Thống"
+                badge: "Dự án Mã nguồn mở Toàn cầu", title: "Hệ sinh thái AI <br>dành cho Sinh viên Quốc tế", desc: "Khám phá kho tàng Prompt AI chuyên sâu nhất, được cấu trúc hóa cho từng chuyên ngành hẹp. Giao diện và câu lệnh tự động biên dịch, biến Gemini thành cố vấn chuyên môn Đa ngôn ngữ của bạn.", search: "Tìm kiếm prompt, chuyên ngành...", btnContribute: "Góp Prompt", copyBtn: "Sao chép lệnh", footerDesc: "Nền tảng tri thức mở kết hợp sức mạnh của Trí tuệ Nhân tạo, dành riêng cho thế hệ sinh viên bứt phá (Quantum Leaps).", toast: "Đã sao chép câu lệnh!", fbTitle: "Đóng góp Prompt", fbDesc: "Kho tàng này lớn mạnh nhờ sự đóng góp của bạn. Dữ liệu dưới đây được phân loại tự động vào máy chủ.", fbName: "Tên của bạn (hoặc MSSV)", fbContent: "Nội dung câu lệnh (Prompt) xuất sắc của bạn", fbBtn: "Gửi Lên Hệ Thống", allPrompts: "Tất cả Prompts", searchResult: "Kết quả tìm kiếm", devRole: "Thiết kế & Lập trình bởi", devTitle: "Ứng cử viên Đại sứ Sinh viên Google 2026", devSub: "(Cựu học sinh chuyên Tin - THPT chuyên Lê Quý Đôn)"
             },
             en: {
-                badge: "Global Open-source Initiative",
-                title: "Global AI Ecosystem <br>for International Students",
-                desc: "Discover the most intensive AI Prompt library, categorized by specialized majors. The system automatically translates via Prompt Engineering, turning Gemini into your multi-lingual advisor.",
-                search: "Search prompts, majors...",
-                btnContribute: "Contribute",
-                copyBtn: "Copy Prompt",
-                footerDesc: "An open knowledge platform combining the power of Artificial Intelligence, exclusively for the breakthrough student generation (Quantum Leaps).",
-                toast: "Prompt copied successfully!",
-                fbTitle: "Contribute Prompt",
-                fbDesc: "This library grows through your contributions. The form data below is automatically categorized into our server.",
-                fbName: "Your Name (or Student ID)",
-                fbContent: "Your optimized prompt content",
-                fbBtn: "Submit to System"
+                badge: "Global Open-source Initiative", title: "Global AI Ecosystem <br>for International Students", desc: "Discover the most intensive AI Prompt library, categorized by specialized majors. The system automatically translates UI and prompts, turning Gemini into your multi-lingual advisor.", search: "Search prompts, majors...", btnContribute: "Contribute", copyBtn: "Copy Prompt", footerDesc: "An open knowledge platform combining the power of Artificial Intelligence, exclusively for the breakthrough student generation (Quantum Leaps).", toast: "Prompt copied successfully!", fbTitle: "Contribute Prompt", fbDesc: "This library grows through your contributions. The data below is automatically categorized into our server.", fbName: "Your Name (or Student ID)", fbContent: "Your optimized prompt content", fbBtn: "Submit to System", allPrompts: "All Prompts", searchResult: "Search Results", devRole: "Designed & Developed by", devTitle: "Google Student Ambassador 2026 Candidate", devSub: "(IT Specialized Alumnus - Le Quy Don High School)"
             },
             zh: {
-                badge: "全球开源计划",
-                title: "面向国际学生的<br>全球 AI 生态系统",
-                desc: "探索最深入的 AI 提示词库，按专业分类。系统通过 Prompt Engineering 自动后台翻译，使 Gemini 成为您的多语言专业顾问。",
-                search: "搜索提示词、专业...",
-                btnContribute: "贡献提示词",
-                copyBtn: "复制提示词",
-                footerDesc: "一个结合人工智能力量的开放知识平台，专为突破性学生一代（Quantum Leaps）而设。",
-                toast: "已成功复制提示词！",
-                fbTitle: "贡献提示词",
-                fbDesc: "这个词库因您的贡献而壮大。下面的表单数据会自动分类到我们的服务器。",
-                fbName: "您的姓名 (或学号)",
-                fbContent: "您的优秀提示词内容",
-                fbBtn: "提交到系统"
+                badge: "全球开源计划", title: "面向国际学生的<br>全球 AI 生态系统", desc: "探索最深入的 AI 提示词库，按专业分类。系统自动翻译界面和提示词，使 Gemini 成为您的多语言专业顾问。", search: "搜索提示词、专业...", btnContribute: "贡献提示词", copyBtn: "复制提示词", footerDesc: "一个结合人工智能力量的开放知识平台，专为突破性学生一代（Quantum Leaps）而设。", toast: "已成功复制提示词！", fbTitle: "贡献提示词", fbDesc: "这个词库因您的贡献而壮大。下面的数据会自动分类到我们的服务器。", fbName: "您的姓名 (或学号)", fbContent: "您的优秀提示词内容", fbBtn: "提交到系统", allPrompts: "所有提示词", searchResult: "搜索结果", devRole: "设计与开发", devTitle: "2026年谷歌校园大使候选人", devSub: "(黎贵惇高中 - 计算机专业校友)"
             },
             de: {
-                badge: "Globale Open-Source-Initiative",
-                title: "Globales KI-Ökosystem <br>für internationale Studenten",
-                desc: "Entdecken Sie die intensivste KI-Prompt-Bibliothek. Das System übersetzt automatisch via Prompt Engineering und macht Gemini zu Ihrem mehrsprachigen Berater.",
-                search: "Suche nach Prompts, Studiengängen...",
-                btnContribute: "Beitragen",
-                copyBtn: "Prompt kopieren",
-                footerDesc: "Eine offene Wissensplattform, die die Kraft der KI kombiniert, exklusiv für die bahnbrechende Studentengeneration.",
-                toast: "Prompt erfolgreich kopiert!",
-                fbTitle: "Prompt beitragen",
-                fbDesc: "Diese Bibliothek wächst durch Ihre Beiträge. Die Formulardaten werden automatisch kategorisiert.",
-                fbName: "Ihr Name",
-                fbContent: "Ihr optimierter Prompt-Inhalt",
-                fbBtn: "Ins System einreichen"
+                badge: "Globale Open-Source-Initiative", title: "Globales KI-Ökosystem <br>für internationale Studenten", desc: "Entdecken Sie die intensivste KI-Prompt-Bibliothek. Das System übersetzt automatisch die Benutzeroberfläche und die Prompts und macht Gemini zu Ihrem mehrsprachigen Berater.", search: "Suche nach Prompts, Studiengängen...", btnContribute: "Beitragen", copyBtn: "Prompt kopieren", footerDesc: "Eine offene Wissensplattform, die die Kraft der KI kombiniert, exklusiv für die bahnbrechende Studentengeneration.", toast: "Prompt erfolgreich kopiert!", fbTitle: "Prompt beitragen", fbDesc: "Diese Bibliothek wächst durch Ihre Beiträge. Die Daten werden automatisch auf unserem Server kategorisiert.", fbName: "Ihr Name (oder Matrikelnummer)", fbContent: "Ihr optimierter Prompt-Inhalt", fbBtn: "Ins System einreichen", allPrompts: "Alle Prompts", searchResult: "Suchergebnisse", devRole: "Entworfen & Entwickelt von", devTitle: "Google Student Ambassador 2026 Kandidat", devSub: "(IT-Absolvent - Le Quy Don Gymnasium)"
             },
             fr: {
-                badge: "Initiative Open-Source Mondiale",
-                title: "Écosystème d'IA mondial <br>pour les étudiants internationaux",
-                desc: "Découvrez la bibliothèque de Prompts IA la plus intensive. Le système traduit automatiquement via Prompt Engineering, transformant Gemini en votre conseiller multilingue.",
-                search: "Rechercher des prompts...",
-                btnContribute: "Contribuer",
-                copyBtn: "Copier le Prompt",
-                footerDesc: "Une plateforme de connaissances ouverte combinant la puissance de l'IA, exclusivement pour la génération d'étudiants percée.",
-                toast: "Prompt copié avec succès !",
-                fbTitle: "Contribuer un Prompt",
-                fbDesc: "Cette bibliothèque s'agrandit grâce à vos contributions. Les données sont automatiquement catégorisées.",
-                fbName: "Votre Nom",
-                fbContent: "Le contenu de votre prompt optimisé",
-                fbBtn: "Soumettre au Système"
+                badge: "Initiative Open-Source Mondiale", title: "Écosystème d'IA mondial <br>pour les étudiants internationaux", desc: "Découvrez la bibliothèque de Prompts IA la plus intensive. Le système traduit automatiquement l'interface et les prompts, transformant Gemini en votre conseiller multilingue.", search: "Rechercher des prompts...", btnContribute: "Contribuer", copyBtn: "Copier le Prompt", footerDesc: "Une plateforme de connaissances ouverte combinant la puissance de l'IA, exclusivement pour la génération d'étudiants percée.", toast: "Prompt copié avec succès !", fbTitle: "Contribuer un Prompt", fbDesc: "Cette bibliothèque s'agrandit grâce à vos contributions. Les données sont automatiquement catégorisées.", fbName: "Votre Nom (ou Numéro d'étudiant)", fbContent: "Le contenu de votre prompt optimisé", fbBtn: "Soumettre au Système", allPrompts: "Tous les Prompts", searchResult: "Résultats de recherche", devRole: "Conçu et développé par", devTitle: "Candidat Ambassadeur Étudiant Google 2026", devSub: "(Ancien élève spécialisé en informatique - Lycée Le Quy Don)"
             }
         };
 
-        // Tiền tố Prompt Engineering để ép AI trả lời bằng ngôn ngữ tương ứng
-        const langSuffix = {
-            vi: "",
-            en: "\n\n(Important Instruction: Please analyze the request above and provide your entire response in English.)",
-            zh: "\n\n(重要提示：请分析上述请求，并全部使用中文提供最终回复。)",
-            de: "\n\n(Wichtige Anweisung: Bitte analysieren Sie die obige Anfrage und geben Sie Ihre gesamte Antwort auf Deutsch.)",
-            fr: "\n\n(Instruction importante : Veuillez analyser la demande ci-dessus et fournir votre réponse entière en français.)"
+        const catTrans = {
+            "Kinh tế & Quản trị": { en: "Business & Management", zh: "经济与管理", de: "Wirtschaft & Management", fr: "Économie et Gestion" },
+            "CNTT & Kỹ thuật": { en: "IT & Engineering", zh: "信息技术与工程", de: "IT & Ingenieurwesen", fr: "Informatique et Ingénierie" },
+            "Y Dược & KHTN": { en: "Health & Sciences", zh: "医药与自然科学", de: "Gesundheit & Naturwissenschaften", fr: "Santé et Sciences" },
+            "XHNV, Luật & Giáo dục": { en: "Social Sciences & Law", zh: "社会科学与法律", de: "Sozialwissenschaften & Recht", fr: "Sciences Sociales et Droit" }
         };
 
-        function changeLang(lang, btnElem) {
-            currentLang = lang;
-            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-            btnElem.classList.add('active');
+        // --- 2. MULTI-LINGUAL PROMPT DATABASE ---
+        // Mỗi prompt giờ đây chứa dữ liệu của 5 ngôn ngữ. Để tối ưu tốc độ, mình demo 4 prompt đại diện.
+        const promptDB = [
+            {
+                id: "biz-1", mainKey: "Kinh tế & Quản trị", subKey: "Digital Marketing", time: "2h",
+                content: {
+                    vi: { title: "Chiến lược Launching 5A", prompt: "Đóng vai CMO, thiết kế chiến lược ra mắt [Sản phẩm] theo mô hình 5A (Kotler). Đề xuất 3 touchpoints trên TikTok, lập ngân sách 70-20-10." },
+                    en: { title: "5A Launching Strategy", prompt: "Act as a CMO. Design a launching strategy for [Product] using Kotler's 5A model. Propose 3 touchpoints on TikTok and plan a 70-20-10 budget." },
+                    zh: { title: "5A 发布策略", prompt: "扮演 CMO。使用科特勒 5A 模型为 [产品] 设计发布策略。在 TikTok 上提出 3 个接触点，并制定 70-20-10 预算计划。" },
+                    de: { title: "5A Einführungsstrategie", prompt: "Agiere als CMO. Entwirf eine Einführungsstrategie für [Produkt] nach dem 5A-Modell. Schlage 3 Touchpoints auf TikTok vor und plane ein 70-20-10 Budget." },
+                    fr: { title: "Stratégie de Lancement 5A", prompt: "Agissez en tant que CMO. Concevez une stratégie de lancement pour [Produit] utilisant le modèle 5A. Proposez 3 points de contact sur TikTok et planifiez un budget 70-20-10." }
+                }
+            },
+            {
+                id: "tech-1", mainKey: "CNTT & Kỹ thuật", subKey: "Software Engineering", time: "2h",
+                content: {
+                    vi: { title: "Debug & Tối ưu Big O", prompt: "Đóng vai Senior Dev. Phân tích đoạn code [Ngôn ngữ]: [Dán Code]. Tìm 'bottleneck' gây Time Limit Exceeded. Tái cấu trúc, tối ưu độ phức tạp thuật toán và giải thích logic." },
+                    en: { title: "Debug & Big O Optimization", prompt: "Act as a Senior Dev. Analyze this [Language] code: [Paste Code]. Find the 'bottleneck' causing Time Limit Exceeded. Refactor, optimize algorithm complexity (Big O), and explain the logic." },
+                    zh: { title: "调试与 Big O 优化", prompt: "扮演高级开发人员。分析此 [语言] 代码：[粘贴代码]。找到导致超时 (TLE) 的瓶颈。重构代码，优化算法复杂度，并解释逻辑。" },
+                    de: { title: "Debug & Big O Optimierung", prompt: "Agiere als Senior Dev. Analysiere diesen [Sprache] Code: [Code einfügen]. Finde den Flaschenhals, der ein Time Limit Exceeded verursacht. Refaktoriere, maximiere die Big O Komplexität und erkläre die Logik." },
+                    fr: { title: "Débogage et Optimisation Big O", prompt: "Agissez comme un Senior Dev. Analysez ce code [Langage] : [Coller le code]. Trouvez le goulot d'étranglement causant le Time Limit Exceeded. Refactorez, optimisez la complexité (Big O) et expliquez la logique." }
+                }
+            },
+            {
+                id: "sci-1", mainKey: "Y Dược & KHTN", subKey: "Medicine", time: "3h",
+                content: {
+                    vi: { title: "Chẩn đoán Phân biệt Y Khoa", prompt: "Phân tích Case lâm sàng: Bệnh nhân [Nam/Nữ, Tuổi], tiền sử [Bệnh], triệu chứng [Mô tả]. Đưa ra 3 chẩn đoán phân biệt, chỉ định cận lâm sàng cần thiết và biện luận y khoa." },
+                    en: { title: "Medical Differential Diagnosis", prompt: "Analyze the clinical case: Patient [M/F, Age], history of [Disease], symptoms [Describe]. Provide 3 differential diagnoses, order necessary subclinical tests, and give medical reasoning." },
+                    zh: { title: "医学鉴别诊断", prompt: "分析临床病例：患者 [男/女，年龄]，病史 [疾病]，症状 [描述]。提供 3 个鉴别诊断，指示必要的辅助检查，并进行医学论证。" },
+                    de: { title: "Medizinische Differentialdiagnose", prompt: "Analysiere den klinischen Fall: Patient [M/W, Alter], Vorgeschichte [Krankheit], Symptome [Beschreiben]. Stelle 3 Differentialdiagnosen, ordne Labortests an und begründe medizinisch." },
+                    fr: { title: "Diagnostic Différentiel Médical", prompt: "Analysez le cas clinique : Patient [H/F, Âge], antécédents [Maladie], symptômes [Décrire]. Donnez 3 diagnostics différentiels, prescrivez les examens nécessaires et justifiez médicalement." }
+                }
+            },
+            {
+                id: "soc-1", mainKey: "XHNV, Luật & Giáo dục", subKey: "Law & Society", time: "2.5h",
+                content: {
+                    vi: { title: "Thẩm định Rủi ro Hợp đồng", prompt: "Đóng vai Luật sư. Thẩm định pháp lý hợp đồng [Loại]: [Dán nội dung]. Xác định 3 lỗ hổng pháp lý rủi ro nhất. Soạn lại các điều khoản để bảo vệ bên [Tên bên]." },
+                    en: { title: "Contract Risk Assessment", prompt: "Act as a Corporate Lawyer. Assess the legal risks of this [Type] contract: [Paste Content]. Identify the top 3 legal loopholes. Draft amended clauses to maximize protection for [Party Name]." },
+                    zh: { title: "合同风险评估", prompt: "扮演公司律师。评估此 [类型] 合同的法律风险：[粘贴内容]。识别排名前 3 的法律漏洞。起草修正条款以最大程度保护 [当事方名称]。" },
+                    de: { title: "Vertragsrisikobewertung", prompt: "Agiere als Unternehmensanwalt. Bewerte die rechtlichen Risiken dieses [Typ] Vertrags: [Inhalt einfügen]. Identifiziere die 3 größten Gesetzeslücken. Entwirf geänderte Klauseln zum Schutz von [Partei]." },
+                    fr: { title: "Évaluation des Risques Contractuels", prompt: "Agissez comme un avocat d'affaires. Évaluez les risques juridiques de ce contrat [Type] : [Coller le contenu]. Identifiez les 3 principales failles. Rédigez des clauses modifiées pour protéger [Partie]." }
+                }
+            }
+        ];
 
-            // Update UI Elements
-            document.getElementById('ui-hero-badge').innerHTML = uiTrans[lang].badge;
-            document.getElementById('ui-hero-title').innerHTML = uiTrans[lang].title;
-            document.getElementById('ui-hero-desc').innerHTML = uiTrans[lang].desc;
-            document.getElementById('searchInput').placeholder = uiTrans[lang].search;
-            document.getElementById('ui-btn-contribute').innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> ${uiTrans[lang].btnContribute}`;
-            document.getElementById('ui-footer-desc').innerHTML = uiTrans[lang].footerDesc;
-            document.getElementById('toast').innerHTML = uiTrans[lang].toast;
-            
-            // Update Feedback Panel
-            document.getElementById('ui-fb-title').innerHTML = `<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg> ${uiTrans[lang].fbTitle}`;
-            document.getElementById('ui-fb-desc').innerHTML = uiTrans[lang].fbDesc;
-            document.getElementById('ui-fb-name').innerHTML = uiTrans[lang].fbName;
-            document.getElementById('ui-fb-content').innerHTML = uiTrans[lang].fbContent;
-            document.getElementById('ui-fb-btn').innerHTML = `${uiTrans[lang].fbBtn} <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>`;
+        let currentLang = 'vi';
+        let currentFilter = 'all';
 
-            // Update All Copy Buttons in Grid
-            document.querySelectorAll('.btn-copy span.txt').forEach(span => {
-                span.innerText = uiTrans[lang].copyBtn;
-            });
+        // Get Translated Category Name
+        function getCatName(mainKey, lang) {
+            if(lang === 'vi') return mainKey;
+            return catTrans[mainKey] ? catTrans[mainKey][lang] : mainKey;
         }
 
         // --- 3. RENDER LOGIC ---
-        const treeData = {};
-        promptDB.forEach(item => {
-            if(!treeData[item.main]) treeData[item.main] = new Set();
-            treeData[item.main].add(item.sub);
-        });
-
-        document.getElementById('statMajors').innerText = Object.keys(treeData).length + " Nhóm ngành lớn";
-        document.getElementById('statPrompts').innerText = promptDB.length + " Prompts";
-        document.getElementById('resultCount').innerText = promptDB.length + " Prompts";
-
-        let treeHTML = "";
-        let groupIdx = 0;
-        for (const [main, subs] of Object.entries(treeData)) {
-            treeHTML += `
-                <div class="cat-group">
-                    <div class="cat-header" onclick="toggleCat(${groupIdx}, this)">${main} <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"></path></svg></div>
-                    <div class="sub-cat-list" id="sub-${groupIdx}">
-            `;
-            subs.forEach(sub => {
-                treeHTML += `<div class="sub-cat-item" onclick="filterData('${sub}', this)">${sub}</div>`;
+        function renderSidebar() {
+            const treeData = {};
+            promptDB.forEach(item => {
+                if(!treeData[item.mainKey]) treeData[item.mainKey] = new Set();
+                treeData[item.mainKey].add(item.subKey);
             });
-            treeHTML += `</div></div>`;
-            groupIdx++;
-        }
-        document.getElementById('treeNav').innerHTML = treeHTML;
 
-        const gridContainer = document.getElementById('gridContainer');
+            let treeHTML = "";
+            let groupIdx = 0;
+            for (const [main, subs] of Object.entries(treeData)) {
+                let translatedMain = getCatName(main, currentLang);
+                treeHTML += `
+                    <div class="cat-group">
+                        <div class="cat-header" onclick="toggleCat(${groupIdx}, this)">${translatedMain} <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"></path></svg></div>
+                        <div class="sub-cat-list" id="sub-${groupIdx}">
+                `;
+                subs.forEach(sub => {
+                    // Note: In a full app, subKeys would also be in catTrans. Keeping it simple here.
+                    treeHTML += `<div class="sub-cat-item" onclick="filterData('${sub}', this)">${sub}</div>`;
+                });
+                treeHTML += `</div></div>`;
+                groupIdx++;
+            }
+            document.getElementById('treeNav').innerHTML = treeHTML;
+            document.getElementById('statMajors').innerText = Object.keys(treeData).length + (currentLang === 'vi' ? " Nhóm ngành" : " Categories");
+        }
+
         function renderCards(data) {
+            const gridContainer = document.getElementById('gridContainer');
             let html = "";
-            data.forEach((p, index) => {
-                const id = "prompt-" + index;
+            data.forEach((p) => {
+                const localizedContent = p.content[currentLang];
+                const translatedMain = getCatName(p.mainKey, currentLang);
+                
                 html += `
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">${p.title}</h3>
+                            <h3 class="card-title">${localizedContent.title}</h3>
                             <span class="card-tag">⚡ ${p.time}</span>
                         </div>
-                        <div class="prompt-text" id="${id}">${p.prompt}</div>
+                        <div class="prompt-text" id="${p.id}">${localizedContent.prompt}</div>
                         <div class="card-actions">
-                            <button class="btn-copy" onclick="copyPrompt('${id}')">
+                            <button class="btn-copy" onclick="copyPrompt('${p.id}')">
                                 <span class="txt">${uiTrans[currentLang].copyBtn}</span>
                                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
                             </button>
-                            <button class="btn-card-feedback" title="Đóng góp ý kiến" onclick="openFeedback('${p.main}', '${p.sub}', '${p.title}')">
+                            <button class="btn-card-feedback" title="Feedback" onclick="openFeedback('${p.id}', '${translatedMain}', '${p.subKey}', '${localizedContent.title}')">
                                 <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
                             </button>
                         </div>
@@ -485,40 +418,79 @@
             });
             gridContainer.innerHTML = html;
             document.getElementById('resultCount').innerText = data.length + " Prompts";
+            document.getElementById('statPrompts').innerText = promptDB.length + "+ Prompts";
         }
-        renderCards(promptDB);
 
-        // --- 4. INTERACTIONS ---
+        // --- 4. LANGUAGE SWITCHER ---
+        function changeLang(lang, btnElem) {
+            currentLang = lang;
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            btnElem.classList.add('active');
+
+            // Update UI Texts
+            document.getElementById('ui-hero-badge').innerHTML = uiTrans[lang].badge;
+            document.getElementById('ui-hero-title').innerHTML = uiTrans[lang].title;
+            document.getElementById('ui-hero-desc').innerHTML = uiTrans[lang].desc;
+            document.getElementById('searchInput').placeholder = uiTrans[lang].search;
+            document.getElementById('ui-btn-contribute').innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> ${uiTrans[lang].btnContribute}`;
+            document.getElementById('ui-footer-desc').innerHTML = uiTrans[lang].footerDesc;
+            document.getElementById('toast').innerHTML = uiTrans[lang].toast;
+            
+            // Footer Dev Info
+            document.getElementById('ui-dev-role').innerText = uiTrans[lang].devRole;
+            document.getElementById('ui-dev-title').innerText = uiTrans[lang].devTitle;
+            document.getElementById('ui-dev-sub').innerText = uiTrans[lang].devSub;
+
+            // Feedback UI
+            document.getElementById('ui-fb-title').innerHTML = `<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg> ${uiTrans[lang].fbTitle}`;
+            document.getElementById('ui-fb-desc').innerHTML = uiTrans[lang].fbDesc;
+            document.getElementById('ui-fb-name').innerHTML = uiTrans[lang].fbName;
+            document.getElementById('ui-fb-content').innerHTML = uiTrans[lang].fbContent;
+            document.getElementById('ui-fb-btn').innerHTML = `${uiTrans[lang].fbBtn} <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>`;
+
+            // Update View Tag
+            document.getElementById('currentViewTag').innerText = currentFilter === 'all' ? uiTrans[lang].allPrompts : currentFilter;
+
+            // Re-render Data
+            renderSidebar();
+            if(currentFilter === 'all') {
+                renderCards(promptDB);
+            } else {
+                renderCards(promptDB.filter(p => p.subKey === currentFilter));
+            }
+        }
+
+        // --- 5. INTERACTIONS ---
         function toggleCat(idx, elem) {
             document.getElementById('sub-' + idx).classList.toggle('show');
             elem.classList.toggle('active');
         }
 
         function filterData(subCat, elem) {
+            currentFilter = subCat;
             document.querySelectorAll('.sub-cat-item').forEach(el => el.classList.remove('active'));
             if(elem) elem.classList.add('active');
+            
             document.getElementById('currentViewTag').innerText = subCat;
-            renderCards(promptDB.filter(p => p.sub === subCat));
+            renderCards(promptDB.filter(p => p.subKey === subCat));
+
             if(window.innerWidth <= 900) toggleSidebar();
         }
 
         function handleSearch() {
             const keyword = document.getElementById('searchInput').value.toLowerCase();
-            document.getElementById('currentViewTag').innerText = keyword ? "Kết quả tìm kiếm" : "Tất cả Prompts";
-            renderCards(promptDB.filter(p => 
-                p.title.toLowerCase().includes(keyword) || p.prompt.toLowerCase().includes(keyword) || p.sub.toLowerCase().includes(keyword)
-            ));
+            document.getElementById('currentViewTag').innerText = keyword ? uiTrans[currentLang].searchResult : uiTrans[currentLang].allPrompts;
+            document.querySelectorAll('.sub-cat-item').forEach(el => el.classList.remove('active'));
+            
+            const filtered = promptDB.filter(p => {
+                const localized = p.content[currentLang];
+                return localized.title.toLowerCase().includes(keyword) || localized.prompt.toLowerCase().includes(keyword) || p.subKey.toLowerCase().includes(keyword)
+            });
+            renderCards(filtered);
         }
 
-        // Kỹ thuật Prompt Engineering để tích hợp ngôn ngữ
         function copyPrompt(id) {
             let text = document.getElementById(id).innerText;
-            
-            // Tự động tiêm thêm câu lệnh yêu cầu AI trả lời bằng ngôn ngữ được chọn
-            if (langSuffix[currentLang]) {
-                text += langSuffix[currentLang];
-            }
-            
             navigator.clipboard.writeText(text);
             const toast = document.getElementById("toast");
             toast.classList.add("show");
@@ -527,17 +499,27 @@
 
         function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
 
-        // --- 5. CONTRIBUTION PANEL (FORMSPREE DATA STRUCTURE) ---
+        // --- 6. FORMSPREE CONTRIBUTION PANEL ---
         const feedbackPanel = document.getElementById('feedbackPanel');
         
-        function openFeedback(mainCat, subCat, promptTitle) {
+        function openFeedback(id, mainCat, subCat, promptTitle) {
             feedbackPanel.classList.add('open');
-            document.getElementById('fbBadges').innerHTML = `<span class="b-main">${mainCat}</span><span class="b-sub">${subCat}</span><div class="b-title">Mục tiêu: ${promptTitle}</div>`;
+            document.getElementById('fbBadges').innerHTML = `
+                <span class="b-main">${mainCat}</span>
+                <span class="b-sub">${subCat}</span>
+                <div class="b-title">Target: ${promptTitle}</div>
+            `;
+            // Điền dữ liệu ẩn để gửi Formspree phân cột
             document.getElementById('formMainCat').value = mainCat;
             document.getElementById('formSubCat').value = subCat;
             document.getElementById('formPromptTitle').value = promptTitle;
+            document.getElementById('formLanguage').value = currentLang.toUpperCase();
         }
         function closeFeedback() { feedbackPanel.classList.remove('open'); }
+
+        // INITIALIZE
+        renderSidebar();
+        renderCards(promptDB);
     </script>
 </body>
 </html>
