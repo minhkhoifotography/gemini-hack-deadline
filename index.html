@@ -40,7 +40,8 @@
 
         /* --- SIDEBAR --- */
         .sidebar { width: var(--sidebar-width); height: 100%; background: rgba(5,5,5,0.85); border-right: 1px solid var(--border-color); backdrop-filter: blur(24px); display: flex; flex-direction: column; z-index: 20; transition: 0.3s; }
-        .logo-area { padding: 20px; font-weight: 800; font-size: 1.15rem; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border-color); letter-spacing: -0.5px;}
+        .logo-area { padding: 20px; font-weight: 800; font-size: 1.15rem; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border-color); letter-spacing: -0.5px; cursor: pointer; transition: 0.2s;}
+        .logo-area:hover { background: rgba(255,255,255,0.05); }
         .logo-area span { background: var(--gradient-accent); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         
         .tree-nav { flex-grow: 1; overflow-y: auto; padding: 15px 10px; }
@@ -122,8 +123,8 @@
         
         .footer-bottom { text-align: center; border-top: 1px solid rgba(255,255,255,0.05); margin-top: 30px; padding-top: 15px; font-size: 0.75rem; color: #555; font-weight: 500;}
 
-        /* --- CONTRIBUTION PANEL --- */
-        .feedback-panel { position: absolute; top: 0; right: 0; width: 400px; max-width: 100%; height: 100%; background: rgba(8, 8, 8, 0.95); backdrop-filter: blur(30px); border-left: 1px solid var(--border-color); transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); z-index: 100; display: flex; flex-direction: column; box-shadow: -15px 0 50px rgba(0,0,0,0.6); }
+        /* --- EXTENDED CONTRIBUTION PANEL --- */
+        .feedback-panel { position: absolute; top: 0; right: 0; width: 480px; max-width: 100%; height: 100%; background: rgba(8, 8, 8, 0.96); backdrop-filter: blur(35px); border-left: 1px solid var(--border-color); transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); z-index: 100; display: flex; flex-direction: column; box-shadow: -15px 0 50px rgba(0,0,0,0.8); }
         .feedback-panel.open { transform: translateX(0); }
         .fb-header { padding: 20px 24px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.02);}
         .fb-header h3 { font-size: 1.1rem; display: flex; align-items: center; gap: 8px; font-weight: 700; }
@@ -135,11 +136,15 @@
         .target-badges .b-main { font-size: 0.7rem; background: rgba(66, 133, 244, 0.1); color: #8ab4f8; padding: 4px 8px; border-radius: 4px; font-weight: 600; }
         .target-badges .b-sub { font-size: 0.7rem; background: rgba(155, 114, 203, 0.1); color: #d7aefb; padding: 4px 8px; border-radius: 4px; font-weight: 600; }
         .target-badges .b-title { font-size: 0.75rem; color: white; width: 100%; margin-top: 4px; font-weight: 600;}
-        .form-group { margin-bottom: 16px; }
-        .form-group label { display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px; font-weight: 500;}
-        .form-group input, .form-group textarea { width: 100%; background: rgba(0,0,0,0.5); border: 1px solid var(--border-color); color: white; padding: 12px 14px; border-radius: 10px; outline: none; font-size: 0.85rem; transition: 0.3s; font-family: 'Plus Jakarta Sans', sans-serif;}
-        .form-group input:focus, .form-group textarea:focus { border-color: var(--gemini-purple); box-shadow: 0 0 0 3px rgba(155,114,203,0.1); }
-        .btn-submit { width: 100%; background: var(--text-main); color: black; border: none; padding: 14px; border-radius: 10px; font-weight: 800; font-size: 0.95rem; cursor: pointer; margin-top: 10px; transition: 0.2s; display: flex; justify-content: center; gap: 8px;}
+        
+        .form-group { margin-bottom: 14px; }
+        .form-row { display: flex; gap: 12px; margin-bottom: 14px; }
+        .form-row .form-group { flex: 1; margin-bottom: 0; }
+        
+        .form-group label { display: block; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 6px; font-weight: 600;}
+        .form-group input, .form-group textarea { width: 100%; background: rgba(0,0,0,0.5); border: 1px solid var(--border-color); color: white; padding: 10px 14px; border-radius: 8px; outline: none; font-size: 0.85rem; transition: 0.3s; font-family: 'Plus Jakarta Sans', sans-serif;}
+        .form-group input:focus, .form-group textarea:focus { border-color: var(--gemini-blue); box-shadow: 0 0 0 3px rgba(66,133,244,0.15); background: rgba(255,255,255,0.02); }
+        .btn-submit { width: 100%; background: var(--text-main); color: black; border: none; padding: 14px; border-radius: 8px; font-weight: 800; font-size: 0.95rem; cursor: pointer; margin-top: 10px; transition: 0.2s; display: flex; justify-content: center; align-items: center; gap: 8px;}
         .btn-submit:hover { background: var(--gradient-accent); color: white; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(155,114,203,0.4); }
 
         #toast { visibility: hidden; background: white; color: black; text-align: center; border-radius: 30px; padding: 10px 24px; position: fixed; z-index: 2000; left: 50%; bottom: 30px; transform: translateX(-50%); font-weight: 700; font-size: 0.85rem; box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
@@ -158,6 +163,7 @@
             .content-header { padding: 0 20px 15px; }
             .pro-footer { padding: 40px 20px 20px; }
             .footer-content { flex-direction: column; align-items: flex-start;}
+            .form-row { flex-direction: column; gap: 14px; }
         }
     </style>
 </head>
@@ -167,7 +173,10 @@
 
     <!-- SIDEBAR -->
     <div class="sidebar" id="sidebar">
-        <div class="logo-area">✦ Swinburne <span>Quantum</span></div>
+        <!-- CHỨC NĂNG BẤM VÀO LOGO QUAY VỀ TRANG CHỦ -->
+        <div class="logo-area" onclick="resetToHome()">
+            ✦ Swinburne <span>Quantum</span>
+        </div>
         <div class="tree-nav" id="treeNav">
             <!-- Rendered by JS -->
         </div>
@@ -183,7 +192,6 @@
             </div>
             
             <div class="top-actions">
-                <!-- LANGUAGE SWITCHER -->
                 <div class="lang-switcher">
                     <button class="lang-btn active" onclick="changeLang('vi', this)">VN</button>
                     <button class="lang-btn" onclick="changeLang('en', this)">EN</button>
@@ -206,8 +214,8 @@
                 <h1 id="ui-hero-title">Hệ sinh thái AI <br>dành cho Sinh viên Quốc tế</h1>
                 <p id="ui-hero-desc">Khám phá kho tàng Prompt AI chuyên sâu nhất, được cấu trúc hóa cho từng chuyên ngành hẹp. Giao diện và câu lệnh tự động biên dịch, biến Gemini thành cố vấn chuyên môn Đa ngôn ngữ của bạn.</p>
                 <div class="hero-stats">
-                    <span id="statMajors">0 Nhóm ngành</span> • 
-                    <span id="statPrompts">0 Prompts</span>
+                    <span id="statMajors">0 Nhóm ngành lớn</span> • 
+                    <span id="statPrompts">300+ Prompts</span>
                 </div>
             </div>
 
@@ -244,35 +252,59 @@
             </footer>
         </div>
 
-        <!-- CONTRIBUTION PANEL -->
+        <!-- CONTRIBUTION PANEL CỰC KỲ CHI TIẾT -->
         <div class="feedback-panel" id="feedbackPanel">
             <div class="fb-header">
                 <h3 id="ui-fb-title"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg> Đóng góp Prompt</h3>
                 <button class="btn-close" onclick="closeFeedback()">×</button>
             </div>
             <div class="fb-body">
-                <p id="ui-fb-desc">Kho tàng này lớn mạnh nhờ sự đóng góp của bạn. Form dữ liệu dưới đây đã được phân loại tự động vào hệ thống máy chủ.</p>
+                <p id="ui-fb-desc">Cộng đồng này lớn mạnh nhờ bạn. Hãy điền đầy đủ thông tin để hệ thống có thể lưu trữ và vinh danh bạn một cách chính xác nhất.</p>
                 
                 <div class="target-badges" id="fbBadges">
                     <!-- Injected by JS -->
                 </div>
 
                 <form action="https://formspree.io/f/YOUR_FORM_ID_HERE" method="POST">
-                    <!-- Hidden Inputs for Formspree Columns -->
+                    <!-- Data Ẩn -->
                     <input type="hidden" name="Main_Category" id="formMainCat">
                     <input type="hidden" name="Sub_Category" id="formSubCat">
-                    <input type="hidden" name="Prompt_Title" id="formPromptTitle">
-                    <input type="hidden" name="Submitted_Language" id="formLanguage">
+                    <input type="hidden" name="Target_Prompt" id="formPromptTitle">
+                    <input type="hidden" name="Language" id="formLanguage">
 
+                    <!-- Form Chi Tiết Nâng Cấp -->
                     <div class="form-group">
-                        <label id="ui-fb-name">Tên của bạn (hoặc MSSV)</label>
-                        <input type="text" name="Contributor_Name" required placeholder="Ex: Michael Khoi">
+                        <label id="ui-fb-uni">Trường Đại học (University)</label>
+                        <input type="text" name="University" required placeholder="VD: Swinburne University of Technology">
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label id="ui-fb-name">Họ và Tên</label>
+                            <input type="text" name="Contributor_Name" required placeholder="VD: Michael Khôi">
+                        </div>
+                        <div class="form-group">
+                            <label id="ui-fb-id">Mã số Sinh viên</label>
+                            <input type="text" name="Student_ID" required placeholder="VD: SWB12345">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label id="ui-fb-major">Ngành học lớn</label>
+                            <input type="text" name="Major_Field" id="autoMajor" required placeholder="VD: Khối Kinh tế">
+                        </div>
+                        <div class="form-group">
+                            <label id="ui-fb-submajor">Chuyên ngành hẹp</label>
+                            <input type="text" name="Sub_Major" id="autoSubMajor" required placeholder="VD: Digital Marketing">
+                        </div>
                     </div>
                     
                     <div class="form-group">
                         <label id="ui-fb-content">Nội dung câu lệnh (Prompt) xuất sắc của bạn</label>
-                        <textarea name="Prompt_Content" rows="7" required placeholder="Paste your optimized prompt here..."></textarea>
+                        <textarea name="Prompt_Content" rows="5" required placeholder="Dán prompt bạn đã thiết kế và thử nghiệm thành công tại đây..."></textarea>
                     </div>
+                    
                     <button type="submit" class="btn-submit" id="ui-fb-btn">
                         Gửi Lên Hệ Thống
                         <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
@@ -286,27 +318,26 @@
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
-        // KIỂM TRA: Đảm bảo bạn đã lưu file database.js cùng thư mục chứa file HTML này!
         if (typeof promptDB === 'undefined') {
-            alert("LỖI: Không tìm thấy file database.js. Vui lòng tạo file database.js và nhúng dữ liệu vào như hướng dẫn!");
+            alert("LỖI: Bạn chưa lưu file database.js! Hãy đảm bảo đã tải file database có chứa 310 prompts để web hoạt động.");
         }
 
-        // --- 1. LOCALIZED DICTIONARY (UI & CATEGORIES) ---
+        // --- 1. LOCALIZED DICTIONARY ---
         const uiTrans = {
             vi: {
-                badge: "Dự án Mã nguồn mở Toàn cầu", title: "Hệ sinh thái AI <br>dành cho Sinh viên Quốc tế", desc: "Khám phá kho tàng Prompt AI chuyên sâu nhất, được cấu trúc hóa cho từng chuyên ngành hẹp. Giao diện và câu lệnh tự động biên dịch, biến Gemini thành cố vấn chuyên môn Đa ngôn ngữ của bạn.", search: "Tìm kiếm prompt, chuyên ngành...", btnContribute: "Góp Prompt", copyBtn: "Sao chép lệnh", footerDesc: "Nền tảng tri thức mở kết hợp sức mạnh của Trí tuệ Nhân tạo, dành riêng cho thế hệ sinh viên bứt phá (Quantum Leaps).", toast: "Đã sao chép câu lệnh!", fbTitle: "Đóng góp Prompt", fbDesc: "Kho tàng này lớn mạnh nhờ sự đóng góp của bạn. Dữ liệu dưới đây được phân loại tự động vào máy chủ.", fbName: "Tên của bạn (hoặc MSSV)", fbContent: "Nội dung câu lệnh (Prompt) xuất sắc của bạn", fbBtn: "Gửi Lên Hệ Thống", allPrompts: "Tất cả Prompts", searchResult: "Kết quả tìm kiếm", devRole: "Thiết kế & Lập trình bởi", devTitle: "Ứng cử viên Đại sứ Sinh viên Google 2026", devSub: "(Cựu học sinh chuyên Tin - THPT chuyên Lê Quý Đôn)"
+                badge: "Dự án Mã nguồn mở Toàn cầu", title: "Hệ sinh thái AI <br>dành cho Sinh viên Quốc tế", desc: "Khám phá kho tàng Prompt AI chuyên sâu nhất, được cấu trúc hóa cho từng chuyên ngành hẹp. Giao diện và câu lệnh tự động biên dịch, biến Gemini thành cố vấn chuyên môn Đa ngôn ngữ của bạn.", search: "Tìm kiếm prompt, chuyên ngành...", btnContribute: "Góp Prompt", copyBtn: "Sao chép lệnh", footerDesc: "Nền tảng tri thức mở kết hợp sức mạnh của Trí tuệ Nhân tạo, dành riêng cho thế hệ sinh viên bứt phá (Quantum Leaps).", toast: "Đã sao chép câu lệnh!", fbTitle: "Đóng góp Prompt", fbDesc: "Cộng đồng này lớn mạnh nhờ bạn. Hãy điền đầy đủ thông tin để hệ thống có thể lưu trữ và vinh danh bạn một cách chính xác nhất.", fbUni: "Trường Đại học (University)", fbName: "Họ và Tên", fbID: "Mã số Sinh viên", fbMajor: "Ngành học", fbSubMajor: "Chuyên ngành", fbContent: "Nội dung câu lệnh (Prompt)", fbBtn: "Gửi Lên Hệ Thống", allPrompts: "Tất cả Prompts", searchResult: "Kết quả tìm kiếm", devRole: "Thiết kế & Lập trình bởi", devTitle: "Ứng cử viên Đại sứ Sinh viên Google 2026", devSub: "(Cựu học sinh chuyên Tin - THPT chuyên Lê Quý Đôn)", statMajors: " Nhóm ngành lớn"
             },
             en: {
-                badge: "Global Open-source Initiative", title: "Global AI Ecosystem <br>for International Students", desc: "Discover the most intensive AI Prompt library, categorized by specialized majors. The system automatically translates UI and prompts, turning Gemini into your multi-lingual advisor.", search: "Search prompts, majors...", btnContribute: "Contribute", copyBtn: "Copy Prompt", footerDesc: "An open knowledge platform combining the power of Artificial Intelligence, exclusively for the breakthrough student generation (Quantum Leaps).", toast: "Prompt copied successfully!", fbTitle: "Contribute Prompt", fbDesc: "This library grows through your contributions. The data below is automatically categorized into our server.", fbName: "Your Name (or Student ID)", fbContent: "Your optimized prompt content", fbBtn: "Submit to System", allPrompts: "All Prompts", searchResult: "Search Results", devRole: "Designed & Developed by", devTitle: "Google Student Ambassador 2026 Candidate", devSub: "(IT Specialized Alumnus - Le Quy Don High School)"
+                badge: "Global Open-source Initiative", title: "Global AI Ecosystem <br>for International Students", desc: "Discover the most intensive AI Prompt library, categorized by specialized majors. The system automatically translates UI and prompts, turning Gemini into your multi-lingual advisor.", search: "Search prompts, majors...", btnContribute: "Contribute", copyBtn: "Copy Prompt", footerDesc: "An open knowledge platform combining the power of Artificial Intelligence, exclusively for the breakthrough student generation (Quantum Leaps).", toast: "Prompt copied successfully!", fbTitle: "Contribute Prompt", fbDesc: "This library grows through your contributions. Please fill out the detailed form to be honored in our system.", fbUni: "University", fbName: "Full Name", fbID: "Student ID", fbMajor: "Major", fbSubMajor: "Specialization", fbContent: "Your optimized prompt", fbBtn: "Submit to System", allPrompts: "All Prompts", searchResult: "Search Results", devRole: "Designed & Developed by", devTitle: "Google Student Ambassador 2026 Candidate", devSub: "(IT Specialized Alumnus - Le Quy Don High School)", statMajors: " Main Categories"
             },
             zh: {
-                badge: "全球开源计划", title: "面向国际学生的<br>全球 AI 生态系统", desc: "探索最深入的 AI 提示词库，按专业分类。系统自动翻译界面和提示词，使 Gemini 成为您的多语言专业顾问。", search: "搜索提示词、专业...", btnContribute: "贡献提示词", copyBtn: "复制提示词", footerDesc: "一个结合人工智能力量的开放知识平台，专为突破性学生一代（Quantum Leaps）而设。", toast: "已成功复制提示词！", fbTitle: "贡献提示词", fbDesc: "这个词库因您的贡献而壮大。下面的数据会自动分类到我们的服务器。", fbName: "您的姓名 (或学号)", fbContent: "您的优秀提示词内容", fbBtn: "提交到系统", allPrompts: "所有提示词", searchResult: "搜索结果", devRole: "设计与开发", devTitle: "2026年谷歌校园大使候选人", devSub: "(黎贵惇高中 - 计算机专业校友)"
+                badge: "全球开源计划", title: "面向国际学生的<br>全球 AI 生态系统", desc: "探索最深入的 AI 提示词库，按专业分类。系统自动翻译界面和提示词，使 Gemini 成为您的多语言专业顾问。", search: "搜索提示词、专业...", btnContribute: "贡献提示词", copyBtn: "复制提示词", footerDesc: "一个结合人工智能力量的开放知识平台，专为突破性学生一代（Quantum Leaps）而设。", toast: "已成功复制提示词！", fbTitle: "贡献提示词", fbDesc: "请填写详细表格，以便我们在系统中准确记录您的贡献。", fbUni: "大学名称", fbName: "姓名", fbID: "学号", fbMajor: "专业", fbSubMajor: "主修方向", fbContent: "提示词内容", fbBtn: "提交到系统", allPrompts: "所有提示词", searchResult: "搜索结果", devRole: "设计与开发", devTitle: "2026年谷歌校园大使候选人", devSub: "(黎贵惇高中 - 计算机专业校友)", statMajors: " 大类"
             },
             de: {
-                badge: "Globale Open-Source-Initiative", title: "Globales KI-Ökosystem <br>für internationale Studenten", desc: "Entdecken Sie die intensivste KI-Prompt-Bibliothek. Das System übersetzt automatisch die Benutzeroberfläche und die Prompts und macht Gemini zu Ihrem mehrsprachigen Berater.", search: "Suche nach Prompts, Studiengängen...", btnContribute: "Beitragen", copyBtn: "Prompt kopieren", footerDesc: "Eine offene Wissensplattform, die die Kraft der KI kombiniert, exklusiv für die bahnbrechende Studentengeneration.", toast: "Prompt erfolgreich kopiert!", fbTitle: "Prompt beitragen", fbDesc: "Diese Bibliothek wächst durch Ihre Beiträge. Die Daten werden automatisch auf unserem Server kategorisiert.", fbName: "Ihr Name (oder Matrikelnummer)", fbContent: "Ihr optimierter Prompt-Inhalt", fbBtn: "Ins System einreichen", allPrompts: "Alle Prompts", searchResult: "Suchergebnisse", devRole: "Entworfen & Entwickelt von", devTitle: "Google Student Ambassador 2026 Kandidat", devSub: "(IT-Absolvent - Le Quy Don Gymnasium)"
+                badge: "Globale Open-Source-Initiative", title: "Globales KI-Ökosystem <br>für internationale Studenten", desc: "Entdecken Sie die intensivste KI-Prompt-Bibliothek. Das System übersetzt automatisch die Benutzeroberfläche und die Prompts.", search: "Suche nach Prompts, Studiengängen...", btnContribute: "Beitragen", copyBtn: "Prompt kopieren", footerDesc: "Eine offene Wissensplattform exklusiv für die bahnbrechende Studentengeneration.", toast: "Prompt erfolgreich kopiert!", fbTitle: "Prompt beitragen", fbDesc: "Bitte füllen Sie das Formular aus, damit das System Sie würdigen kann.", fbUni: "Universität", fbName: "Vollständiger Name", fbID: "Matrikelnummer", fbMajor: "Studiengang", fbSubMajor: "Spezialisierung", fbContent: "Ihr optimierter Prompt", fbBtn: "Einreichen", allPrompts: "Alle Prompts", searchResult: "Suchergebnisse", devRole: "Entworfen & Entwickelt von", devTitle: "Google Student Ambassador 2026 Kandidat", devSub: "(IT-Absolvent - Le Quy Don Gymnasium)", statMajors: " Hauptkategorien"
             },
             fr: {
-                badge: "Initiative Open-Source Mondiale", title: "Écosystème d'IA mondial <br>pour les étudiants internationaux", desc: "Découvrez la bibliothèque de Prompts IA la plus intensive. Le système traduit automatiquement l'interface et les prompts, transformant Gemini en votre conseiller multilingue.", search: "Rechercher des prompts...", btnContribute: "Contribuer", copyBtn: "Copier le Prompt", footerDesc: "Une plateforme de connaissances ouverte combinant la puissance de l'IA, exclusivement pour la génération d'étudiants percée.", toast: "Prompt copié avec succès !", fbTitle: "Contribuer un Prompt", fbDesc: "Cette bibliothèque s'agrandit grâce à vos contributions. Les données sont automatiquement catégorisées.", fbName: "Votre Nom (ou Numéro d'étudiant)", fbContent: "Le contenu de votre prompt optimisé", fbBtn: "Soumettre au Système", allPrompts: "Tous les Prompts", searchResult: "Résultats de recherche", devRole: "Conçu et développé par", devTitle: "Candidat Ambassadeur Étudiant Google 2026", devSub: "(Ancien élève spécialisé en informatique - Lycée Le Quy Don)"
+                badge: "Initiative Open-Source Mondiale", title: "Écosystème d'IA mondial <br>pour les étudiants internationaux", desc: "Découvrez la bibliothèque de Prompts IA la plus intensive. Le système traduit automatiquement l'interface et les prompts.", search: "Rechercher des prompts...", btnContribute: "Contribuer", copyBtn: "Copier le Prompt", footerDesc: "Une plateforme de connaissances ouverte exclusivement pour la génération d'étudiants percée.", toast: "Prompt copié avec succès !", fbTitle: "Contribuer un Prompt", fbDesc: "Veuillez remplir le formulaire détaillé pour être honoré dans notre système.", fbUni: "Université", fbName: "Nom complet", fbID: "Numéro d'étudiant", fbMajor: "Majeure", fbSubMajor: "Spécialisation", fbContent: "Le contenu de votre prompt", fbBtn: "Soumettre", allPrompts: "Tous les Prompts", searchResult: "Résultats de recherche", devRole: "Conçu et développé par", devTitle: "Candidat Ambassadeur Étudiant Google 2026", devSub: "(Ancien élève spécialisé en informatique - Lycée Le Quy Don)", statMajors: " Catégories"
             }
         };
 
@@ -327,7 +358,7 @@
             return catTrans[mainKey] ? catTrans[mainKey][lang] : mainKey;
         }
 
-        // --- 3. RENDER LOGIC ---
+        // --- 2. RENDER LOGIC ---
         function renderSidebar() {
             const treeData = {};
             promptDB.forEach(item => {
@@ -351,14 +382,13 @@
                 groupIdx++;
             }
             document.getElementById('treeNav').innerHTML = treeHTML;
-            document.getElementById('statMajors').innerText = Object.keys(treeData).length + (currentLang === 'vi' ? " Nhóm ngành lớn" : " Categories");
+            document.getElementById('statMajors').innerText = Object.keys(treeData).length + uiTrans[currentLang].statMajors;
         }
 
         function renderCards(data) {
             const gridContainer = document.getElementById('gridContainer');
             let html = "";
             data.forEach((p) => {
-                // Safety check if language data exists, fallback to English then Vietnamese
                 let localizedContent = p.content[currentLang] || p.content['en'] || p.content['vi'];
                 let translatedMain = getCatName(p.mainKey, currentLang);
                 
@@ -374,7 +404,7 @@
                                 <span class="txt">${uiTrans[currentLang].copyBtn}</span>
                                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
                             </button>
-                            <button class="btn-card-feedback" title="Feedback" onclick="openFeedback('${p.id}', '${translatedMain}', '${p.subKey}', '${localizedContent.title}')">
+                            <button class="btn-card-feedback" title="Feedback" onclick="openFeedback('${p.id}', '${p.mainKey}', '${p.subKey}', '${localizedContent.title}')">
                                 <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
                             </button>
                         </div>
@@ -383,16 +413,16 @@
             });
             gridContainer.innerHTML = html;
             document.getElementById('resultCount').innerText = data.length + " Prompts";
-            // Lấy độ lớn thực sự của file DB bên ngoài để làm thông số
-            document.getElementById('statPrompts').innerText = "200+ Prompts"; 
+            document.getElementById('statPrompts').innerText = "300+ Prompts"; 
         }
 
-        // --- 4. LANGUAGE SWITCHER ---
+        // --- 3. LANGUAGE & NAVIGATION ---
         function changeLang(lang, btnElem) {
             currentLang = lang;
             document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-            btnElem.classList.add('active');
+            if(btnElem) btnElem.classList.add('active');
 
+            // Update UI
             document.getElementById('ui-hero-badge').innerHTML = uiTrans[lang].badge;
             document.getElementById('ui-hero-title').innerHTML = uiTrans[lang].title;
             document.getElementById('ui-hero-desc').innerHTML = uiTrans[lang].desc;
@@ -401,13 +431,19 @@
             document.getElementById('ui-footer-desc').innerHTML = uiTrans[lang].footerDesc;
             document.getElementById('toast').innerHTML = uiTrans[lang].toast;
             
+            // Footer
             document.getElementById('ui-dev-role').innerText = uiTrans[lang].devRole;
             document.getElementById('ui-dev-title').innerText = uiTrans[lang].devTitle;
             document.getElementById('ui-dev-sub').innerText = uiTrans[lang].devSub;
 
+            // Feedback Panel
             document.getElementById('ui-fb-title').innerHTML = `<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg> ${uiTrans[lang].fbTitle}`;
             document.getElementById('ui-fb-desc').innerHTML = uiTrans[lang].fbDesc;
+            document.getElementById('ui-fb-uni').innerHTML = uiTrans[lang].fbUni;
             document.getElementById('ui-fb-name').innerHTML = uiTrans[lang].fbName;
+            document.getElementById('ui-fb-id').innerHTML = uiTrans[lang].fbID;
+            document.getElementById('ui-fb-major').innerHTML = uiTrans[lang].fbMajor;
+            document.getElementById('ui-fb-submajor').innerHTML = uiTrans[lang].fbSubMajor;
             document.getElementById('ui-fb-content').innerHTML = uiTrans[lang].fbContent;
             document.getElementById('ui-fb-btn').innerHTML = `${uiTrans[lang].fbBtn} <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>`;
 
@@ -421,7 +457,15 @@
             }
         }
 
-        // --- 5. INTERACTIONS ---
+        // RESET TRANG KHI BẤM LOGO
+        function resetToHome() {
+            currentFilter = 'all';
+            document.getElementById('searchInput').value = '';
+            document.querySelectorAll('.sub-cat-item').forEach(el => el.classList.remove('active'));
+            changeLang(currentLang, document.querySelector('.lang-btn.active'));
+        }
+
+        // --- 4. INTERACTIONS ---
         function toggleCat(idx, elem) {
             document.getElementById('sub-' + idx).classList.toggle('show');
             elem.classList.toggle('active');
@@ -450,8 +494,17 @@
             renderCards(filtered);
         }
 
+        const langSuffix = {
+            vi: "",
+            en: "\n\n(Important Instruction: Please provide your entire response in English.)",
+            zh: "\n\n(重要提示：请全部使用中文提供最终回复。)",
+            de: "\n\n(Wichtige Anweisung: Bitte geben Sie Ihre gesamte Antwort auf Deutsch.)",
+            fr: "\n\n(Instruction importante : Veuillez fournir votre réponse entière en français.)"
+        };
+
         function copyPrompt(id) {
             let text = document.getElementById(id).innerText;
+            if (langSuffix[currentLang]) text += langSuffix[currentLang];
             navigator.clipboard.writeText(text);
             const toast = document.getElementById("toast");
             toast.classList.add("show");
@@ -460,24 +513,33 @@
 
         function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
 
-        // --- 6. FORMSPREE CONTRIBUTION PANEL ---
+        // --- 5. FORMSPREE CONTRIBUTION PANEL ---
         const feedbackPanel = document.getElementById('feedbackPanel');
         
         function openFeedback(id, mainCat, subCat, promptTitle) {
             feedbackPanel.classList.add('open');
+            
+            // Generate visual badges
+            let translatedMain = getCatName(mainCat, currentLang);
             document.getElementById('fbBadges').innerHTML = `
-                <span class="b-main">${mainCat}</span>
+                <span class="b-main">${translatedMain}</span>
                 <span class="b-sub">${subCat}</span>
                 <div class="b-title">Target: ${promptTitle}</div>
             `;
+            
+            // Auto-fill form fields logic
             document.getElementById('formMainCat').value = mainCat;
             document.getElementById('formSubCat').value = subCat;
             document.getElementById('formPromptTitle').value = promptTitle;
             document.getElementById('formLanguage').value = currentLang.toUpperCase();
+
+            // Tự động điền trước Ngành và Chuyên Ngành nếu người dùng bấm từ Card
+            document.getElementById('autoMajor').value = (mainCat === 'Global Platform') ? '' : mainCat;
+            document.getElementById('autoSubMajor').value = (subCat === 'Nền tảng') ? '' : subCat;
         }
         function closeFeedback() { feedbackPanel.classList.remove('open'); }
 
-        // INITIALIZE
+        // START APP
         renderSidebar();
         renderCards(promptDB);
     </script>
