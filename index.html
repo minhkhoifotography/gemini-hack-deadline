@@ -2,344 +2,438 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Swinburne Quantum Prompts | Powered by Gemini</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Swinburne Quantum Hub | Open-source AI Prompts</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        /* CSS Styling - Enterprise SaaS Level */
+        /* --- CORE VARIABLES & RESET --- */
         :root {
-            --bg-base: #000000;
+            --bg-base: #020202;
             --bg-surface: #0a0a0a;
-            --card-bg: rgba(255, 255, 255, 0.02);
-            --card-border: rgba(255, 255, 255, 0.08);
-            --card-hover: rgba(255, 255, 255, 0.15);
-            --text-primary: #ffffff;
-            --text-secondary: #888888;
+            --bg-panel: rgba(15, 15, 15, 0.7);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --text-main: #f5f5f7;
+            --text-muted: #86868b;
             --gemini-blue: #4285F4;
             --gemini-purple: #9B72CB;
             --gemini-red: #D96570;
-            --gemini-gradient: linear-gradient(135deg, var(--gemini-blue), var(--gemini-purple), var(--gemini-red));
+            --gradient-accent: linear-gradient(135deg, var(--gemini-blue), var(--gemini-purple), var(--gemini-red));
+            --sidebar-width: 300px;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        
+        body { background-color: var(--bg-base); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
 
-        body {
-            background-color: var(--bg-base); color: var(--text-primary); line-height: 1.6;
-            display: flex; flex-direction: column; align-items: center; min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        /* Ambient Background Glow */
+        /* Background Effects */
         .ambient-glow {
-            position: fixed; top: -20%; left: 50%; transform: translateX(-50%);
-            width: 600px; height: 600px; border-radius: 50%;
-            background: radial-gradient(circle, rgba(155,114,203,0.15) 0%, rgba(0,0,0,0) 70%);
+            position: fixed; top: -15%; left: 20%; width: 50vw; height: 50vw;
+            background: radial-gradient(circle, rgba(155,114,203,0.12) 0%, rgba(0,0,0,0) 60%);
+            z-index: -1; pointer-events: none;
+        }
+        .ambient-glow-2 {
+            position: fixed; bottom: -20%; right: -10%; width: 40vw; height: 40vw;
+            background: radial-gradient(circle, rgba(66,133,244,0.1) 0%, rgba(0,0,0,0) 60%);
             z-index: -1; pointer-events: none;
         }
 
-        /* Navbar */
-        nav {
-            width: 100%; padding: 20px 40px; display: flex; justify-content: space-between;
-            align-items: center; border-bottom: 1px solid var(--card-border);
-            background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 100;
+        /* --- SIDEBAR --- */
+        .sidebar {
+            width: var(--sidebar-width); height: 100%; background: rgba(5,5,5,0.8);
+            border-right: 1px solid var(--border-color); backdrop-filter: blur(20px);
+            display: flex; flex-direction: column; z-index: 10; transition: 0.3s;
         }
-        .nav-logo { font-weight: 800; font-size: 1.2rem; display: flex; align-items: center; gap: 8px; }
-        .nav-logo span { background: var(--gemini-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .nav-btn { background: var(--text-primary); color: var(--bg-base); padding: 8px 20px; border-radius: 30px; font-weight: 600; text-decoration: none; transition: 0.3s; font-size: 0.9rem;}
-        .nav-btn:hover { transform: scale(1.05); }
-
-        /* Hero Section */
-        .hero { text-align: center; max-width: 900px; padding: 80px 20px 40px; animation: fadeInUp 1s ease; }
-        .badge { display: inline-block; padding: 6px 16px; background: rgba(255,255,255,0.05); border: 1px solid var(--card-border); border-radius: 50px; font-size: 0.85rem; font-weight: 500; margin-bottom: 20px; color: var(--text-secondary);}
-        .hero h1 { font-size: 3.5rem; font-weight: 800; line-height: 1.1; margin-bottom: 20px; letter-spacing: -1px; }
-        .hero p { color: var(--text-secondary); font-size: 1.15rem; max-width: 600px; margin: 0 auto; }
-
-        /* Search & Filter Bar */
-        .utility-bar {
-            width: 100%; max-width: 1200px; padding: 0 20px; margin-bottom: 40px; display: flex;
-            flex-direction: column; gap: 20px; align-items: center;
-        }
-        .search-box {
-            width: 100%; max-width: 600px; position: relative;
-        }
-        .search-box input {
-            width: 100%; padding: 18px 25px 18px 50px; background: var(--bg-surface);
-            border: 1px solid var(--card-border); border-radius: 50px; color: var(--text-primary);
-            font-size: 1rem; transition: 0.3s; outline: none;
-        }
-        .search-box input:focus { border-color: var(--gemini-purple); box-shadow: 0 0 20px rgba(155,114,203,0.2); }
-        .search-icon { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); opacity: 0.5; }
-
-        .filter-tags { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
-        .filter-btn {
-            background: transparent; color: var(--text-secondary); border: 1px solid var(--card-border);
-            padding: 8px 18px; border-radius: 30px; cursor: pointer; font-size: 0.9rem; font-weight: 500; transition: all 0.3s;
-        }
-        .filter-btn:hover, .filter-btn.active { background: var(--text-primary); color: var(--bg-base); }
-
-        /* Grid & Cards */
-        .prompt-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 24px; width: 100%; max-width: 1200px; padding: 0 20px; margin-bottom: 80px;
-        }
-        .prompt-card {
-            background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px;
-            padding: 25px; display: flex; flex-direction: column; transition: all 0.4s ease;
-            backdrop-filter: blur(10px); position: relative; overflow: hidden;
-        }
-        .prompt-card.hide { display: none; }
-        .prompt-card:hover { transform: translateY(-5px); border-color: var(--card-hover); background: rgba(255,255,255,0.04); }
+        .logo-area { padding: 24px 20px; font-weight: 800; font-size: 1.2rem; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border-color); }
+        .logo-area span { background: var(--gradient-accent); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         
-        .card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
-        .card-title { font-size: 1.2rem; font-weight: 700; display: flex; align-items: center; gap: 10px; }
-        .time-saved { font-size: 0.75rem; background: rgba(66, 133, 244, 0.1); color: var(--gemini-blue); padding: 4px 10px; border-radius: 20px; font-weight: 600; }
+        .tree-nav { flex-grow: 1; overflow-y: auto; padding: 15px 10px; }
+        .tree-nav::-webkit-scrollbar, .prompt-text::-webkit-scrollbar, .main-content::-webkit-scrollbar { width: 4px; }
+        .tree-nav::-webkit-scrollbar-thumb, .prompt-text::-webkit-scrollbar-thumb, .main-content::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+
+        .cat-group { margin-bottom: 8px; }
+        .cat-header {
+            padding: 10px 15px; font-size: 0.9rem; font-weight: 700; color: var(--text-main);
+            cursor: pointer; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; transition: 0.2s;
+        }
+        .cat-header:hover { background: rgba(255,255,255,0.05); }
+        .cat-header svg { width: 14px; transition: 0.3s; opacity: 0.6; }
+        .cat-header.active svg { transform: rotate(90deg); }
         
-        .prompt-text {
-            background: rgba(0, 0, 0, 0.4); padding: 15px; border-radius: 12px;
-            color: #d1d1d1; font-family: monospace; font-size: 0.9rem; line-height: 1.5;
-            margin-bottom: 20px; flex-grow: 1; border: 1px solid rgba(255,255,255,0.03);
+        .sub-cat-list { display: none; padding-left: 10px; margin-top: 2px; }
+        .sub-cat-list.show { display: block; }
+        .sub-cat-item {
+            padding: 8px 15px 8px 20px; font-size: 0.85rem; color: var(--text-muted);
+            cursor: pointer; border-radius: 8px; position: relative; transition: 0.2s;
         }
+        .sub-cat-item::before { content: ""; position: absolute; left: 8px; top: 0; bottom: 0; width: 1px; background: var(--border-color); }
+        .sub-cat-item:hover, .sub-cat-item.active { color: white; background: rgba(255,255,255,0.04); }
+        .sub-cat-item.active::before { background: var(--gradient-accent); width: 2px; }
+
+        /* --- MAIN AREA --- */
+        .main-wrapper { flex-grow: 1; display: flex; flex-direction: column; position: relative; overflow: hidden; }
         
-        .card-bottom { display: flex; justify-content: space-between; align-items: center; }
-        .tags span { font-size: 0.75rem; color: var(--text-secondary); margin-right: 8px; }
-        .copy-btn {
-            background: var(--text-primary); color: var(--bg-base); border: none;
-            padding: 10px 20px; border-radius: 12px; cursor: pointer; font-weight: 700; transition: 0.2s; display: flex; align-items: center; gap: 6px;
+        .topbar {
+            height: 70px; padding: 0 30px; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.5); backdrop-filter: blur(10px); z-index: 5;
         }
-        .copy-btn:hover { background: var(--gemini-gradient); color: white; transform: scale(1.05); }
+        .search-box { position: relative; width: 300px; }
+        .search-box input { width: 100%; padding: 10px 15px 10px 35px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); border-radius: 20px; color: white; outline: none; font-size: 0.9rem; transition: 0.3s; }
+        .search-box input:focus { border-color: var(--gemini-purple); }
+        .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); opacity: 0.5; width: 14px; }
+        .mobile-menu-btn { display: none; background: transparent; border: none; color: white; font-size: 1.5rem; cursor: pointer; }
 
-        /* Contribution Section */
-        .cta-container { width: 100%; padding: 0 20px; display: flex; justify-content: center; margin-bottom: 80px; }
-        .cta-box {
-            width: 100%; max-width: 800px; background: rgba(255,255,255,0.02);
-            border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; padding: 50px;
-            text-align: center; position: relative; overflow: hidden;
-        }
-        .cta-box::before {
-            content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-            background: var(--gemini-gradient);
-        }
-        .cta-box h2 { font-size: 2.2rem; margin-bottom: 10px; font-weight: 800; }
-        .cta-box p { color: var(--text-secondary); margin-bottom: 30px; }
+        .main-content { flex-grow: 1; overflow-y: auto; display: flex; flex-direction: column; scroll-behavior: smooth; }
+
+        /* --- HERO SECTION --- */
+        .hero { padding: 60px 40px 40px; text-align: center; max-width: 900px; margin: 0 auto; }
+        .hero h1 { font-size: 3rem; font-weight: 800; letter-spacing: -1px; margin-bottom: 15px; }
+        .hero p { color: var(--text-muted); font-size: 1.1rem; line-height: 1.6; margin-bottom: 25px; }
+        .hero-stats { display: inline-flex; gap: 15px; background: rgba(255,255,255,0.03); padding: 8px 20px; border-radius: 50px; border: 1px solid var(--border-color); font-size: 0.85rem; font-weight: 600; color: var(--gemini-blue); }
+
+        /* --- GRID CARDS --- */
+        .content-header { padding: 0 40px 20px; font-size: 1.4rem; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+        .content-header span { font-size: 0.8rem; background: rgba(255,255,255,0.1); padding: 3px 10px; border-radius: 20px; font-weight: 500; }
         
-        input, textarea {
-            width: 100%; background: rgba(0, 0, 0, 0.5); border: 1px solid var(--card-border);
-            color: var(--text-primary); padding: 16px; border-radius: 12px; margin-bottom: 16px;
-            font-size: 1rem; outline: none; transition: 0.3s;
-        }
-        input:focus, textarea:focus { border-color: var(--gemini-purple); background: rgba(0,0,0,0.8); }
-        .submit-btn {
-            background: var(--gemini-gradient); color: white; border: none; padding: 18px;
-            border-radius: 12px; font-weight: 800; font-size: 1.1rem; cursor: pointer; width: 100%;
-            transition: 0.3s; box-shadow: 0 10px 30px rgba(155,114,203,0.3);
-        }
-        .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 15px 40px rgba(155,114,203,0.5); }
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; padding: 0 40px 60px; }
+        
+        .card { background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 16px; padding: 20px; display: flex; flex-direction: column; transition: 0.3s; position: relative; overflow: hidden; }
+        .card:hover { transform: translateY(-3px); border-color: rgba(255,255,255,0.15); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+        .card-title { font-size: 1.05rem; font-weight: 700; color: white; line-height: 1.4; }
+        .card-tag { font-size: 0.7rem; background: rgba(255,255,255,0.05); padding: 4px 8px; border-radius: 6px; color: var(--text-muted); white-space: nowrap; }
+        
+        .prompt-text { background: rgba(0,0,0,0.4); padding: 12px; border-radius: 8px; color: #d1d1d1; font-family: monospace; font-size: 0.85rem; line-height: 1.5; margin-bottom: 15px; flex-grow: 1; border: 1px solid rgba(255,255,255,0.02); max-height: 150px; overflow-y: auto; }
+        
+        .card-actions { display: flex; gap: 10px; }
+        .btn-copy { flex: 2; background: var(--text-main); color: black; border: none; padding: 10px; border-radius: 8px; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: 0.2s; display: flex; justify-content: center; align-items: center; gap: 6px; }
+        .btn-copy:hover { background: var(--gradient-accent); color: white; }
+        .btn-feedback { flex: 1; background: transparent; color: var(--text-main); border: 1px solid var(--border-color); padding: 10px; border-radius: 8px; font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: 0.2s; display: flex; justify-content: center; align-items: center; gap: 4px; }
+        .btn-feedback:hover { background: rgba(255,255,255,0.1); }
 
-        /* Toast Notification */
-        #toast {
-            visibility: hidden; min-width: 250px; background-color: #333; color: #fff;
-            text-align: center; border-radius: 50px; padding: 16px; position: fixed;
-            z-index: 1000; left: 50%; bottom: 30px; font-size: 1rem; font-weight: 600;
-            transform: translateX(-50%); box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            background: var(--gemini-gradient); border: 2px solid rgba(255,255,255,0.2);
+        /* --- FOOTER (Developer Section) --- */
+        .pro-footer { border-top: 1px solid var(--border-color); background: rgba(5,5,5,0.5); padding: 60px 40px 30px; margin-top: auto; }
+        .footer-content { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; flex-wrap: wrap; gap: 30px; }
+        .footer-brand h2 { font-size: 1.5rem; margin-bottom: 5px; background: var(--gradient-accent); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .footer-brand p { color: var(--text-muted); font-size: 0.9rem; max-width: 300px; }
+        
+        .developer-profile { display: flex; align-items: center; gap: 15px; background: rgba(255,255,255,0.03); padding: 15px 25px; border-radius: 16px; border: 1px solid var(--border-color); }
+        .dev-avatar { width: 50px; height: 50px; border-radius: 50%; background: var(--gradient-accent); display: flex; justify-content: center; align-items: center; font-weight: 800; font-size: 1.2rem; color: white; }
+        .dev-info h4 { font-size: 1rem; color: white; margin-bottom: 2px; }
+        .dev-info p { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 2px; }
+        .dev-info .highlight { color: var(--gemini-purple); font-weight: 600; }
+        
+        .footer-bottom { text-align: center; border-top: 1px solid rgba(255,255,255,0.05); margin-top: 40px; padding-top: 20px; font-size: 0.8rem; color: #555; }
+
+        /* --- CONTRIBUTION PANEL (Slide from Right) --- */
+        .feedback-panel {
+            position: absolute; top: 0; right: 0; width: 420px; max-width: 100%; height: 100%;
+            background: rgba(12, 12, 12, 0.95); backdrop-filter: blur(25px); border-left: 1px solid var(--border-color);
+            transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); z-index: 100;
+            display: flex; flex-direction: column; box-shadow: -10px 0 40px rgba(0,0,0,0.5);
         }
-        #toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2.5s; }
+        .feedback-panel.open { transform: translateX(0); }
+        .fb-header { padding: 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
+        .fb-header h3 { font-size: 1.2rem; display: flex; align-items: center; gap: 8px; }
+        .btn-close { background: transparent; border: none; color: white; font-size: 1.5rem; cursor: pointer; padding: 5px; }
+        
+        .fb-body { padding: 25px 20px; overflow-y: auto; flex-grow: 1; }
+        .fb-body p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px; line-height: 1.5; }
+        
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 6px; }
+        .form-group input, .form-group textarea { width: 100%; background: rgba(0,0,0,0.4); border: 1px solid var(--border-color); color: white; padding: 12px; border-radius: 8px; outline: none; font-size: 0.9rem; transition: 0.3s; }
+        .form-group input:focus, .form-group textarea:focus { border-color: var(--gemini-blue); }
+        
+        .btn-submit { width: 100%; background: var(--gradient-accent); color: white; border: none; padding: 14px; border-radius: 8px; font-weight: 700; font-size: 1rem; cursor: pointer; margin-top: 10px; transition: 0.2s; }
+        .btn-submit:hover { opacity: 0.9; transform: translateY(-2px); }
 
-        footer { text-align: center; padding: 30px; color: var(--text-secondary); font-size: 0.9rem; border-top: 1px solid var(--card-border); width: 100%; }
-
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        #toast { visibility: hidden; background: white; color: black; text-align: center; border-radius: 30px; padding: 12px 24px; position: fixed; z-index: 2000; left: 50%; bottom: 30px; transform: translateX(-50%); font-weight: 700; font-size: 0.9rem; box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
+        #toast.show { visibility: visible; animation: fadein 0.3s, fadeout 0.3s 2s; }
         @keyframes fadein { from { bottom: 0; opacity: 0; } to { bottom: 30px; opacity: 1; } }
         @keyframes fadeout { from { bottom: 30px; opacity: 1; } to { bottom: 0; opacity: 0; } }
 
-        @media (max-width: 768px) {
-            .hero h1 { font-size: 2.5rem; }
-            .cta-box { padding: 30px 20px; }
+        @media (max-width: 900px) {
+            .sidebar { position: absolute; left: -100%; }
+            .sidebar.open { left: 0; box-shadow: 20px 0 50px rgba(0,0,0,0.8); }
+            .mobile-menu-btn { display: block; }
+            .search-box { display: none; } /* Hide on mobile to save space */
+            .hero { padding: 40px 20px 20px; }
+            .hero h1 { font-size: 2.2rem; }
+            .grid-container { padding: 0 20px 40px; grid-template-columns: 1fr; }
+            .content-header { padding: 0 20px 15px; }
+            .pro-footer { padding: 40px 20px 20px; }
         }
     </style>
 </head>
 <body>
-
     <div class="ambient-glow"></div>
+    <div class="ambient-glow-2"></div>
 
-    <nav>
-        <div class="nav-logo">✦ Swinburne <span>Quantum</span></div>
-        <a href="#contribute" class="nav-btn">Tham gia Cộng đồng</a>
-    </nav>
-
-    <div class="hero">
-        <div class="badge">Google Student Ambassador 2026 Initiative</div>
-        <h1>Hack Your Deadline <br>with <span class="gradient-text">Gemini AI</span></h1>
-        <p>Hệ sinh thái Prompt chuẩn mực được thiết kế riêng cho sinh viên Swinburne K8. Tối ưu hiệu suất, khai phóng sáng tạo.</p>
-    </div>
-
-    <div class="utility-bar">
-        <div class="search-box">
-            <svg class="search-icon" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-            <input type="text" id="searchInput" onkeyup="searchPrompts()" placeholder="Tìm kiếm prompt (VD: Marketing, C++, Dịch thuật...)">
-        </div>
-        <div class="filter-tags">
-            <button class="filter-btn active" onclick="filterSelection('all')">Tất cả</button>
-            <button class="filter-btn" onclick="filterSelection('tech')">IT & Công nghệ</button>
-            <button class="filter-btn" onclick="filterSelection('biz')">Kinh tế & Marketing</button>
-            <button class="filter-btn" onclick="filterSelection('art')">Sáng tạo & Thiết kế</button>
-            <button class="filter-btn" onclick="filterSelection('acad')">Học thuật</button>
+    <!-- SIDEBAR -->
+    <div class="sidebar" id="sidebar">
+        <div class="logo-area">✦ Swinburne <span>Quantum</span></div>
+        <div class="tree-nav" id="treeNav">
+            <!-- Rendered by JS -->
         </div>
     </div>
 
-    <div class="prompt-grid" id="promptGrid">
-        <!-- Card 1 -->
-        <div class="prompt-card filter-biz">
-            <div class="card-top">
-                <div class="card-title">📈 Digital Marketing</div>
-                <div class="time-saved">⚡ Tiết kiệm 2 giờ</div>
+    <!-- MAIN CONTENT -->
+    <div class="main-wrapper">
+        <div class="topbar">
+            <button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
+            <div class="search-box">
+                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                <input type="text" id="searchInput" onkeyup="handleSearch()" placeholder="Tìm kiếm prompt, chuyên ngành...">
             </div>
-            <div class="prompt-text" id="p1">Đóng vai Giám đốc Marketing thực chiến, lập khung chiến lược 3 giai đoạn ra mắt [Tên sản phẩm]. Áp dụng mô hình AIDA, tối ưu ngân sách trên nền tảng [Nền tảng] và đề xuất 2 ý tưởng Marketing Du kích viral.</div>
-            <div class="card-bottom">
-                <div class="tags"><span>#strategy</span><span>#marketing</span></div>
-                <button class="copy-btn" onclick="copyText('p1')">Copy</button>
-            </div>
+            <button class="btn-feedback" onclick="openFeedback('General', 'Góp ý chung')" style="border:none; border-bottom: 1px solid white; border-radius:0; padding: 5px;">Cộng đồng đóng góp</button>
         </div>
 
-        <!-- Card 2 -->
-        <div class="prompt-card filter-tech">
-            <div class="card-top">
-                <div class="card-title">💻 Software Engineering</div>
-                <div class="time-saved">⚡ Tiết kiệm 3 giờ</div>
-            </div>
-            <div class="prompt-text" id="p2">Đóng vai Senior C++ Developer. Phân tích đoạn code sau: [Dán Code]. Tìm chính xác 'bottleneck' gây lỗi Time Limit Exceeded, viết lại code để tối ưu độ phức tạp thuật toán và giải thích logic sửa đổi.</div>
-            <div class="card-bottom">
-                <div class="tags"><span>#coding</span><span>#debug</span></div>
-                <button class="copy-btn" onclick="copyText('p2')">Copy</button>
-            </div>
-        </div>
-
-        <!-- Card 3 -->
-        <div class="prompt-card filter-biz filter-tech">
-            <div class="card-top">
-                <div class="card-title">📊 Data Analytics</div>
-                <div class="time-saved">⚡ Tiết kiệm 1.5 giờ</div>
-            </div>
-            <div class="prompt-text" id="p3">Đóng vai Data Analyst, viết truy vấn SQL phức tạp để trích xuất [Mục tiêu dữ liệu] từ bảng [Tên bảng]. Giải thích logic JOIN và cách tối ưu hóa Query để không làm treo hệ thống Database.</div>
-            <div class="card-bottom">
-                <div class="tags"><span>#data</span><span>#sql</span></div>
-                <button class="copy-btn" onclick="copyText('p3')">Copy</button>
-            </div>
-        </div>
-
-        <!-- Card 4 -->
-        <div class="prompt-card filter-acad">
-            <div class="card-top">
-                <div class="card-title">🎓 Academic Writing</div>
-                <div class="time-saved">⚡ Tiết kiệm 45 phút</div>
-            </div>
-            <div class="prompt-text" id="p4">Nâng cấp đoạn văn tiếng Anh thô sau thành giọng văn học thuật (Academic Tone) chuẩn đại học: [Dán văn bản]. Sử dụng cấu trúc câu phức, từ vựng chuyên ngành [Tên ngành] và giữ thái độ khách quan.</div>
-            <div class="card-bottom">
-                <div class="tags"><span>#essay</span><span>#ielts</span></div>
-                <button class="copy-btn" onclick="copyText('p4')">Copy</button>
-            </div>
-        </div>
-
-        <!-- Card 5 -->
-        <div class="prompt-card filter-art">
-            <div class="card-top">
-                <div class="card-title">🎨 Visual Design</div>
-                <div class="time-saved">⚡ Tiết kiệm 2.5 giờ</div>
-            </div>
-            <div class="prompt-text" id="p5">Đóng vai Art Director, gợi ý 3 Visual Concept cho chiến dịch [Chủ đề]. Cung cấp bảng màu chi tiết (kèm mã Hex) và cấp cho tôi 1 câu lệnh tiếng Anh (Image Prompt) chuẩn để tạo ảnh minh họa bằng AI.</div>
-            <div class="card-bottom">
-                <div class="tags"><span>#design</span><span>#concept</span></div>
-                <button class="copy-btn" onclick="copyText('p5')">Copy</button>
-            </div>
-        </div>
-        
-        <!-- Card 6 -->
-        <div class="prompt-card filter-biz">
-            <div class="card-top">
-                <div class="card-title">🌍 International Biz</div>
-                <div class="time-saved">⚡ Tiết kiệm 2 giờ</div>
-            </div>
-            <div class="prompt-text" id="p6">Phân tích tác động của [Sự kiện kinh tế] đến chuỗi cung ứng toàn cầu của ngành [Tên ngành]. Đưa ra 3 kịch bản dự báo (Tích cực, Tiêu cực, Cân bằng) trong ngắn hạn dựa trên số liệu thực tế.</div>
-            <div class="card-bottom">
-                <div class="tags"><span>#economics</span><span>#supplychain</span></div>
-                <button class="copy-btn" onclick="copyText('p6')">Copy</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Formspree Integration -->
-    <div class="cta-container" id="contribute">
-        <div class="cta-box">
-            <h2>Kiến tạo Di sản K8</h2>
-            <p>Trở thành Contributor. Gửi Prompt tâm đắc nhất của bạn để xây dựng cộng đồng Swinburne vững mạnh.</p>
-            <form action="https://formspree.io/f/YOUR_FORM_ID_HERE" method="POST">
-                <div style="display: flex; gap: 16px; margin-bottom: 16px; flex-wrap: wrap;">
-                    <input type="text" name="Name" placeholder="Tên / Nickname" required style="margin-bottom: 0; flex: 1; min-width: 200px;">
-                    <input type="text" name="Major" placeholder="Chuyên ngành" required style="margin-bottom: 0; flex: 1; min-width: 200px;">
+        <div class="main-content" id="mainContent">
+            <!-- HERO -->
+            <div class="hero">
+                <div class="badge">Dự án Mã nguồn mở (Open-source)</div>
+                <h1>Hệ sinh thái AI <br>dành cho Sinh viên Swinburne</h1>
+                <p>Swinburne Quantum Hub là thư viện sở hữu hàng trăm câu lệnh (Prompt) AI chuyên sâu, được thiết kế bao phủ toàn bộ các nhóm ngành đại học. Xóa bỏ khoảng cách giữa lý thuyết và thực chiến, biến Gemini thành cố vấn chuyên môn 24/7 của bạn.</p>
+                <div class="hero-stats">
+                    <span id="statMajors">0 Nhóm ngành</span> • 
+                    <span id="statPrompts">0 Prompts</span>
                 </div>
-                <textarea name="Prompt" rows="4" placeholder="Dán prompt của bạn vào đây (Kèm mô tả ngắn cách sử dụng)..." required></textarea>
-                <button type="submit" class="submit-btn">ĐÓNG GÓP PROMPT NGAY</button>
-            </form>
+            </div>
+
+            <!-- CARDS GRID -->
+            <div class="content-header">
+                <span id="currentViewTag">Tất cả Prompts</span>
+                <span id="resultCount" style="font-size:0.9rem; background: transparent; color: var(--text-muted)"></span>
+            </div>
+            <div class="grid-container" id="gridContainer">
+                <!-- Rendered by JS -->
+            </div>
+
+            <!-- PRO FOOTER -->
+            <footer class="pro-footer">
+                <div class="footer-content">
+                    <div class="footer-brand">
+                        <h2>Swinburne Quantum</h2>
+                        <p>Nền tảng tri thức mở kết hợp sức mạnh của Trí tuệ Nhân tạo, dành riêng cho thế hệ sinh viên bứt phá (Quantum Leaps).</p>
+                    </div>
+                    <div class="developer-profile">
+                        <div class="dev-avatar">K</div>
+                        <div class="dev-info">
+                            <p>Designed & Developed by</p>
+                            <h4>Lưu Minh Khôi</h4>
+                            <p class="highlight">Google Student Ambassador 2026 Candidate</p>
+                            <p>Digital Marketing & Int. Economics | Swinburne HCMC</p>
+                            <p style="font-size: 0.75rem; opacity: 0.7; margin-top: 4px;">(Cựu học sinh chuyên Tin - THPT chuyên Lê Quý Đôn)</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    &copy; 2026 Initiated by Khôi Lưu. Powered by Google Gemini Initiative.
+                </div>
+            </footer>
+        </div>
+
+        <!-- CONTRIBUTION PANEL -->
+        <div class="feedback-panel" id="feedbackPanel">
+            <div class="fb-header">
+                <h3><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg> Đóng góp & Cải thiện</h3>
+                <button class="btn-close" onclick="closeFeedback()">×</button>
+            </div>
+            <div class="fb-body">
+                <p>Nền tảng này phát triển dựa trên sức mạnh của cộng đồng (Crowdsourcing). Nếu bạn có một Prompt hay hơn, hoặc phát hiện lỗi của Prompt hiện tại, hãy gửi cho chúng mình nhé!</p>
+                
+                <!-- BẢO MẬT: THAY LINK FORMSPREE CỦA BẠN VÀO ĐÂY -->
+                <form action="https://formspree.io/f/YOUR_FORM_ID_HERE" method="POST">
+                    <div class="form-group">
+                        <label>Tên của bạn (hoặc Nickname)</label>
+                        <input type="text" name="Sender_Name" required placeholder="VD: Khôi Lưu">
+                    </div>
+                    <div class="form-group">
+                        <label>Đang góp ý cho chuyên ngành / Prompt</label>
+                        <input type="text" name="Target_Prompt" id="fbTarget" readonly style="background: rgba(255,255,255,0.05); color: var(--gemini-blue)">
+                    </div>
+                    <div class="form-group">
+                        <label>Nội dung đóng góp (Câu lệnh mới của bạn)</label>
+                        <textarea name="Contribution_Content" rows="6" required placeholder="Dán prompt bạn đã thiết kế và thử nghiệm thành công tại đây..."></textarea>
+                    </div>
+                    <button type="submit" class="btn-submit">Gửi Đóng Góp Ngay</button>
+                </form>
+            </div>
         </div>
     </div>
 
-    <footer>
-        <p>Designed & Developed by <strong>Lưu Minh Khôi</strong><br>Google Student Ambassador 2026 Candidate</p>
-    </footer>
+    <div id="toast">Đã sao chép câu lệnh!</div>
 
-    <!-- Toast Element -->
-    <div id="toast">✅ Đã sao chép Prompt thành công!</div>
-
+    <!-- JAVASCRIPT DATABASE & LOGIC -->
     <script>
-        // 1. Toast & Copy Logic
-        function copyText(elementId) {
-            const text = document.getElementById(elementId).innerText;
-            navigator.clipboard.writeText(text).then(() => {
-                var x = document.getElementById("toast");
-                x.className = "show";
-                setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+        // --- 1. KHỞI TẠO CƠ SỞ DỮ LIỆU PROMPTS (MỞ RỘNG VÔ HẠN) ---
+        const promptDB = [
+            // Khối Kinh tế & Quản trị
+            { main: "Kinh tế & Quản trị", sub: "Digital Marketing", title: "Chiến lược Launching 5A", time: "2h", prompt: "Đóng vai CMO, thiết kế chiến lược ra mắt [Sản phẩm] theo mô hình 5A (Kotler). Đề xuất 3 touchpoints trên TikTok, lập ngân sách 70-20-10." },
+            { main: "Kinh tế & Quản trị", sub: "Digital Marketing", title: "Tối ưu hóa Phễu CRO", time: "1.5h", prompt: "Đóng vai Chuyên gia Tối ưu hóa Chuyển đổi (CRO). Audit phễu bán hàng của chiến dịch [Tên chiến dịch]. Đề xuất 3 A/B test cho Landing Page và kịch bản Retargeting." },
+            { main: "Kinh tế & Quản trị", sub: "Kế toán - Kiểm toán", title: "Lập Kế hoạch Kiểm toán (Audit Plan)", time: "3h", prompt: "Đóng vai Senior Auditor, lập kế hoạch kiểm toán chu trình Bán hàng & Thu tiền cho công ty [Ngành nghề]. Đánh giá rủi ro (ROMM) và đề xuất thử nghiệm kiểm soát tuân thủ ISA." },
+            { main: "Kinh tế & Quản trị", sub: "Kế toán - Kiểm toán", title: "Phân tích BCTC (IFRS)", time: "2h", prompt: "Đóng vai Chuyên gia Phân tích Tài chính. Đọc các số liệu [Dán chỉ số ROE, ROA, D/E] và đánh giá khả năng hoạt động liên tục (Going Concern) của doanh nghiệp." },
+            { main: "Kinh tế & Quản trị", sub: "Tài chính - Đầu tư", title: "Định giá Cổ phiếu DCF", time: "3.5h", prompt: "Đóng vai CFA. Định giá cổ phiếu [Mã CK] bằng mô hình DCF. Tính toán WACC, dự phóng dòng tiền FCFF 5 năm và phân tích độ nhạy (Sensitivity Analysis)." },
+            { main: "Kinh tế & Quản trị", sub: "Logistics & Chuỗi cung ứng", title: "Tối ưu hóa Tuyến đường (VRP)", time: "2h", prompt: "Giải bài toán tối ưu hóa tuyến đường giao hàng (VRP) cho đội xe [Số lượng], phân phối đến [Y] điểm. Đề xuất thuật toán giảm thiểu chi phí xăng dầu." },
+            { main: "Kinh tế & Quản trị", sub: "Quản trị Nhân sự (HRM)", title: "Thiết lập Hệ thống OKRs", time: "2h", prompt: "Đóng vai CHRO. Xây dựng bộ OKRs cho phòng [Tên phòng ban]. Đề xuất 1 Objective truyền cảm hứng và 3 Key Results định lượng (SMART)." },
+            { main: "Kinh tế & Quản trị", sub: "Kinh doanh Quốc tế", title: "Chiến lược Xâm nhập Thị trường", time: "2.5h", prompt: "Đóng vai Giám đốc Chiến lược. Lập kế hoạch đưa sản phẩm [Tên sản phẩm Việt Nam] thâm nhập thị trường [Tên quốc gia]. Phân tích rào cản vĩ mô (PESTEL) và phương thức thâm nhập (Export/FDI/Joint Venture)." },
+            
+            // Khối Công nghệ Thông tin & Kỹ thuật
+            { main: "CNTT & Kỹ thuật", sub: "Phát triển Phần mềm (SE)", title: "Debug & Tối ưu Big O", time: "2h", prompt: "Đóng vai Senior Dev. Phân tích đoạn code [Ngôn ngữ]: [Dán Code]. Tìm 'bottleneck' gây Time Limit Exceeded. Tái cấu trúc, tối ưu độ phức tạp thuật toán và giải thích logic." },
+            { main: "CNTT & Kỹ thuật", sub: "Phát triển Phần mềm (SE)", title: "Thiết kế System Architecture", time: "4h", prompt: "Đóng vai Software Architect. Thiết kế kiến trúc Microservices cho ứng dụng [Loại ứng dụng] chịu tải 1 triệu CCU. Vẽ sơ đồ luồng dữ liệu và chọn Tech Stack (Message Queue, DB)." },
+            { main: "CNTT & Kỹ thuật", sub: "AI & Data Science", title: "Quy trình EDA & Feature Engineering", time: "3h", prompt: "Đóng vai Data Scientist. Hướng dẫn các bước EDA (Exploratory Data Analysis) cho dataset [Tên/Lĩnh vực]. Xử lý Missing values, Outliers và thực hiện Feature Engineering." },
+            { main: "CNTT & Kỹ thuật", sub: "AI & Data Science", title: "Thiết kế Mô hình Deep Learning", time: "3.5h", prompt: "Thiết kế kiến trúc mạng Neural (CNN/RNN/Transformer) cho bài toán [Phân loại ảnh/NLP]. Chọn hàm Loss, Optimizer và chiến thuật chống Overfitting." },
+            { main: "CNTT & Kỹ thuật", sub: "An toàn Thông tin (CyberSec)", title: "Kịch bản Pentest Ứng dụng Web", time: "3h", prompt: "Đóng vai Ethical Hacker. Lập kịch bản Pentest Hộp xám theo chuẩn OWASP Top 10 cho ứng dụng [Tên/Loại]. Liệt kê các payload test XSS, SQLi và SSRF." },
+            { main: "CNTT & Kỹ thuật", sub: "Điện & Điện tử", title: "Lập trình Nhúng (Embedded/RTOS)", time: "2.5h", prompt: "Viết cấu trúc code C/C++ sử dụng FreeRTOS cho vi điều khiển [STM32/ESP32]. Thiết lập 3 Tasks có ưu tiên khác nhau, sử dụng Mutex/Semaphore để tránh Race Condition." },
+            { main: "CNTT & Kỹ thuật", sub: "Kỹ thuật Xây dựng", title: "Phân tích Kết cấu Kháng chấn", time: "3h", prompt: "Phân tích phản ứng động lực học của khung bê tông cốt thép dưới tải trọng động đất. Đề xuất các biện pháp cấu tạo kháng chấn (Detailing) theo tiêu chuẩn Eurocode 8." },
+            { main: "CNTT & Kỹ thuật", sub: "Kỹ thuật Hàng không & Ô tô", title: "Mô phỏng Khí động học (CFD)", time: "4h", prompt: "Hướng dẫn thiết lập thông số biên (Boundary conditions) trong phần mềm ANSYS Fluent để mô phỏng khí động học xung quanh thân xe/máy bay nhằm giảm hệ số cản (Drag)." },
+
+            // Khối Y Dược & Khoa học Tự nhiên
+            { main: "Y Dược & KHTN", sub: "Y khoa Lâm sàng", title: "Chẩn đoán Phân biệt", time: "3h", prompt: "Phân tích Case lâm sàng: Bệnh nhân [Nam/Nữ, Tuổi], tiền sử [Bệnh], triệu chứng [Mô tả]. Đưa ra 3 chẩn đoán phân biệt, chỉ định cận lâm sàng cần thiết và biện luận y khoa." },
+            { main: "Y Dược & KHTN", sub: "Dược học", title: "Tương tác Thuốc (Drug Interaction)", time: "1.5h", prompt: "Đánh giá tương tác thuốc trong đơn thuốc sau: [Liệt kê]. Giải thích cơ chế (CYP450), mức độ nghiêm trọng và tư vấn điều chỉnh liều hoặc đổi thuốc an toàn hơn." },
+            { main: "Y Dược & KHTN", sub: "Răng Hàm Mặt", title: "Phác đồ Chỉnh nha (Orthodontics)", time: "2h", prompt: "Đóng vai Bác sĩ RHM. Lập phác đồ chỉnh nha cho bệnh nhân sai khớp cắn Hạng [I/II/III]. Phân tích chỉ số sọ mặt, lựa chọn khí cụ và dự đoán thời gian điều trị." },
+            { main: "Y Dược & KHTN", sub: "Công nghệ Sinh học", title: "Chỉnh sửa Gen CRISPR/Cas9", time: "3.5h", prompt: "Thiết kế trình tự sgRNA để Knock-out gen [Tên gen] trên tế bào bằng hệ thống CRISPR/Cas9. Đánh giá rủi ro Off-target và phương pháp kiểm chứng đột biến." },
+            { main: "Y Dược & KHTN", sub: "Khoa học Môi trường", title: "Đánh giá Tác động Môi trường (ĐTM)", time: "3h", prompt: "Lập đề cương ĐTM cho dự án [Nhà máy/Khu công nghiệp]. Ước tính tải lượng ô nhiễm (Nước thải, khí thải) và đề xuất công nghệ xử lý vi sinh/hóa lý đạt chuẩn QCVN." },
+
+            // Khối Xã hội nhân văn, Luật & Sư phạm
+            { main: "XHNV, Luật & Giáo dục", sub: "Luật Hình sự & Dân sự", title: "Thẩm định Rủi ro Hợp đồng", time: "2.5h", prompt: "Đóng vai Luật sư. Thẩm định pháp lý hợp đồng [Loại]: [Dán nội dung]. Xác định 3 lỗ hổng pháp lý rủi ro nhất theo Luật VN hiện hành và soạn lại điều khoản." },
+            { main: "XHNV, Luật & Giáo dục", sub: "Tâm lý học Lâm sàng", title: "Kế hoạch Can thiệp CBT", time: "3h", prompt: "Phân tích thân chủ có triệu chứng [Trầm cảm/Rối loạn âu lo]. Nhận diện các 'Niềm tin cốt lõi' sai lệch. Lên kế hoạch can thiệp 5 phiên bằng Liệu pháp Nhận thức Hành vi (CBT)." },
+            { main: "XHNV, Luật & Giáo dục", sub: "Quan hệ Quốc tế", title: "Phân tích Địa chính trị", time: "2h", prompt: "Đóng vai Chuyên gia Địa chính trị. Phân tích tác động của [Sự kiện/Hiệp ước] đến chính sách đối ngoại của Việt Nam dựa trên thuyết Chủ nghĩa Hiện thực (Realism)." },
+            { main: "XHNV, Luật & Giáo dục", sub: "Ngôn ngữ & Dịch thuật", title: "Bản địa hóa (Localization)", time: "1.5h", prompt: "Dịch và bản địa hóa đoạn hội thoại game/ứng dụng sau sang tiếng Việt: [Dán text]. Yêu cầu: Bắt trend Gen Z, sử dụng từ lóng (Slang) tự nhiên, không dịch Word-by-Word." },
+            { main: "XHNV, Luật & Giáo dục", sub: "Sư phạm & Giáo dục", title: "Soạn Giáo án kiến tạo (Flipped Class)", time: "2h", prompt: "Thiết kế Giáo án 45 phút môn [Môn học] chủ đề [Chủ đề] theo phương pháp Lớp học đảo ngược. Sử dụng thang nhận thức Bloom và tích hợp học tập qua dự án (PBL)." },
+
+            // Khối Nghệ thuật, Kiến trúc & Nông Lâm
+            { main: "Nghệ thuật & Kiến trúc", sub: "Thiết kế Đồ họa (UI/UX)", title: "Quy trình Thiết kế UX", time: "2.5h", prompt: "Thiết kế luồng người dùng (User Flow) và Cấu trúc thông tin (Information Architecture) cho ứng dụng [Tên/Loại App]. Đề xuất các nguyên tắc UX/UI (Gestalt, Heuristics)." },
+            { main: "Nghệ thuật & Kiến trúc", sub: "Kiến trúc & Nội thất", title: "Tổ chức Không gian (Space Planning)", time: "3h", prompt: "Lập phương án phân khu chức năng và tổ chức không gian nội thất cho [Loại công trình] diện tích [X m2] phong cách [Tên phong cách]. Tối ưu luồng giao thông (Circulation)." },
+            { main: "Nghệ thuật & Kiến trúc", sub: "Truyền thông Đa phương tiện", title: "Script Breakdown (Phân rã kịch bản)", time: "2h", prompt: "Từ kịch bản văn học sau: [Dán kịch bản], chuyển thể thành Kịch bản phân cảnh (Shooting Script) chi tiết gồm: Cỡ cảnh, Góc máy, Chuyển động máy và Âm thanh." },
+            { main: "Nghệ thuật & Kiến trúc", sub: "Thiết kế Thời trang", title: "Lên Concept Bộ Sưu Tập", time: "1.5h", prompt: "Đóng vai Giám đốc Sáng tạo. Lên ý tưởng cho Bộ sưu tập thời trang lấy cảm hứng từ [Chủ đề]. Xác định Silhouette (Form dáng) chủ đạo, chất liệu vải và kỹ thuật xử lý bề mặt." },
+            { main: "Nghệ thuật & Kiến trúc", sub: "Nông nghiệp & Thú y", title: "Thiết kế Nông nghiệp IoT", time: "3h", prompt: "Thiết kế hệ thống tưới nhỏ giọt kết hợp châm phân (Fertigation) tự động bằng IoT cho vườn [Tên cây]. Tính toán EC/pH, lượng nước theo từng giai đoạn sinh trưởng." }
+            
+            // LƯU Ý CHO DEVELOPER: Dễ dàng Copy/Paste thêm hàng trăm object vào mảng này mà không làm hỏng HTML.
+        ];
+
+        // --- 2. LOGIC RENDER GIAO DIỆN TỰ ĐỘNG ---
+        
+        // Extract Unique Main Categories & Subcategories
+        const treeData = {};
+        promptDB.forEach(item => {
+            if(!treeData[item.main]) treeData[item.main] = new Set();
+            treeData[item.main].add(item.sub);
+        });
+
+        // Cập nhật thống kê Hero
+        document.getElementById('statMajors').innerText = Object.keys(treeData).length + " Nhóm ngành lớn";
+        document.getElementById('statPrompts').innerText = promptDB.length + "+ Prompts chuyên sâu";
+        document.getElementById('resultCount').innerText = promptDB.length + " Prompts";
+
+        // Render Sidebar Tree
+        const treeNav = document.getElementById('treeNav');
+        let treeHTML = "";
+        let groupIdx = 0;
+        
+        for (const [main, subs] of Object.entries(treeData)) {
+            treeHTML += `
+                <div class="cat-group">
+                    <div class="cat-header" onclick="toggleCat(${groupIdx}, this)">
+                        ${main}
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"></path></svg>
+                    </div>
+                    <div class="sub-cat-list" id="sub-${groupIdx}">
+            `;
+            subs.forEach(sub => {
+                treeHTML += `<div class="sub-cat-item" onclick="filterData('${sub}', this)">${sub}</div>`;
             });
+            treeHTML += `</div></div>`;
+            groupIdx++;
+        }
+        treeNav.innerHTML = treeHTML;
+
+        // Render Cards Grid
+        const gridContainer = document.getElementById('gridContainer');
+        function renderCards(data) {
+            let html = "";
+            data.forEach((p, index) => {
+                const id = "prompt-" + index;
+                html += `
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">${p.title}</h3>
+                            <span class="card-tag">⚡ ${p.time}</span>
+                        </div>
+                        <div class="prompt-text" id="${id}">${p.prompt}</div>
+                        <div class="card-actions">
+                            <button class="btn-copy" onclick="copyPrompt('${id}')">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                                Sao chép lệnh
+                            </button>
+                            <button class="btn-feedback" onclick="openFeedback('${p.sub}', '${p.title}')">Góp ý</button>
+                        </div>
+                    </div>
+                `;
+            });
+            gridContainer.innerHTML = html;
+            document.getElementById('resultCount').innerText = data.length + " Prompts";
+        }
+        
+        // Khởi tạo ban đầu
+        renderCards(promptDB);
+
+        // --- 3. CÁC HÀM TƯƠNG TÁC (INTERACTIONS) ---
+
+        function toggleCat(idx, elem) {
+            const subList = document.getElementById('sub-' + idx);
+            subList.classList.toggle('show');
+            elem.classList.toggle('active');
         }
 
-        // 2. Filter Tag Logic
-        function filterSelection(c) {
-            var x = document.getElementsByClassName("prompt-card");
-            if (c == "all") c = "";
-            for (var i = 0; i < x.length; i++) {
-                x[i].classList.remove("hide");
-                if (x[i].className.indexOf(c) == -1) x[i].classList.add("hide");
-            }
-            var btns = document.getElementsByClassName("filter-btn");
-            for (var i = 0; i < btns.length; i++) {
-                btns[i].classList.remove("active");
-                if(btns[i].getAttribute('onclick').includes(c || 'all')) btns[i].classList.add("active");
-            }
+        function filterData(subCat, elem) {
+            // UI Active state
+            document.querySelectorAll('.sub-cat-item').forEach(el => el.classList.remove('active'));
+            if(elem) elem.classList.add('active');
+            
+            // Logic Filter
+            document.getElementById('currentViewTag').innerText = subCat;
+            const filtered = promptDB.filter(p => p.sub === subCat);
+            renderCards(filtered);
+
+            // Đóng sidebar trên mobile
+            if(window.innerWidth <= 900) toggleSidebar();
         }
 
-        // 3. Live Search Logic
-        function searchPrompts() {
-            var input, filter, grid, cards, title, text, i, txtValueTitle, txtValueText;
-            input = document.getElementById('searchInput');
-            filter = input.value.toUpperCase();
-            grid = document.getElementById("promptGrid");
-            cards = grid.getElementsByClassName('prompt-card');
+        function handleSearch() {
+            const keyword = document.getElementById('searchInput').value.toLowerCase();
+            document.getElementById('currentViewTag').innerText = keyword ? "Kết quả tìm kiếm" : "Tất cả Prompts";
+            document.querySelectorAll('.sub-cat-item').forEach(el => el.classList.remove('active'));
+            
+            const filtered = promptDB.filter(p => 
+                p.title.toLowerCase().includes(keyword) || 
+                p.prompt.toLowerCase().includes(keyword) || 
+                p.sub.toLowerCase().includes(keyword)
+            );
+            renderCards(filtered);
+        }
 
-            // Bỏ active của các nút filter khi đang search
-            var btns = document.getElementsByClassName("filter-btn");
-            for (var j = 0; j < btns.length; j++) { btns[j].classList.remove("active"); }
+        function copyPrompt(id) {
+            const text = document.getElementById(id).innerText;
+            navigator.clipboard.writeText(text);
+            const toast = document.getElementById("toast");
+            toast.classList.add("show");
+            setTimeout(() => toast.classList.remove("show"), 2000);
+        }
 
-            for (i = 0; i < cards.length; i++) {
-                title = cards[i].querySelector(".card-title");
-                text = cards[i].querySelector(".prompt-text");
-                if (title || text) {
-                    txtValueTitle = title.textContent || title.innerText;
-                    txtValueText = text.textContent || text.innerText;
-                    if (txtValueTitle.toUpperCase().indexOf(filter) > -1 || txtValueText.toUpperCase().indexOf(filter) > -1) {
-                        cards[i].classList.remove("hide");
-                    } else {
-                        cards[i].classList.add("hide");
-                    }
-                }
-            }
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        // --- 4. LOGIC PANEL ĐÓNG GÓP Ý KIẾN ---
+        const feedbackPanel = document.getElementById('feedbackPanel');
+        
+        function openFeedback(subCat, promptTitle) {
+            feedbackPanel.classList.add('open');
+            document.getElementById('fbTarget').value = `[${subCat}] - ${promptTitle}`;
+        }
+        
+        function closeFeedback() {
+            feedbackPanel.classList.remove('open');
         }
     </script>
 </body>
