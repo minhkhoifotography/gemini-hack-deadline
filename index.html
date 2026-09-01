@@ -6,7 +6,7 @@
     <title>Swinburne Quantum Prompts - Hack Your Deadline</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
-        /* CSS Styling - Modern & Quiet Luxury */
+        /* CSS Styling - Pro Level */
         :root {
             --bg-color: #050505;
             --card-bg: rgba(255, 255, 255, 0.03);
@@ -16,12 +16,7 @@
             --gemini-gradient: linear-gradient(135deg, #4285F4 0%, #9B72CB 50%, #D96570 100%);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
 
         body {
             background-color: var(--bg-color);
@@ -31,76 +26,46 @@
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
-            padding: 40px 20px;
+            padding: 40px 20px 100px 20px; /* Thêm padding dưới cho Floating CTA */
         }
 
-        /* Header Section */
-        .header {
-            text-align: center;
-            max-width: 800px;
-            margin-bottom: 50px;
-            animation: fadeIn 1s ease-in-out;
-        }
+        /* Header */
+        .header { text-align: center; max-width: 800px; margin-bottom: 40px; animation: fadeIn 1s ease-in-out; }
+        .header h1 { font-size: 2.8rem; font-weight: 800; margin-bottom: 15px; letter-spacing: -0.5px; }
+        .gradient-text { background: var(--gemini-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .header p { color: var(--text-muted); font-size: 1.1rem; }
 
-        .header h1 {
-            font-size: 2.5rem;
-            font-weight: 800;
-            margin-bottom: 15px;
-            letter-spacing: -0.5px;
-        }
-
-        .gradient-text {
-            background: var(--gemini-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .header p {
-            color: var(--text-muted);
-            font-size: 1.1rem;
-            font-weight: 300;
-        }
-
-        /* Instructions */
-        .steps {
+        /* Filter Tags */
+        .filter-container {
             display: flex;
             justify-content: center;
-            gap: 30px;
-            margin-bottom: 50px;
             flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 40px;
+            max-width: 1000px;
         }
-
-        .step-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: var(--card-bg);
-            padding: 10px 20px;
-            border-radius: 50px;
+        .filter-btn {
+            background: transparent;
+            color: var(--text-main);
             border: 1px solid var(--card-border);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
             font-size: 0.9rem;
-            font-weight: 600;
+            transition: all 0.3s;
         }
-
-        .step-number {
+        .filter-btn:hover, .filter-btn.active {
             background: var(--text-main);
             color: var(--bg-color);
-            width: 24px;
-            height: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            font-size: 0.8rem;
         }
 
         /* Prompt Grid */
         .prompt-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 24px;
             width: 100%;
-            max-width: 1100px;
+            max-width: 1200px;
             margin-bottom: 60px;
         }
 
@@ -108,297 +73,215 @@
             background: var(--card-bg);
             border: 1px solid var(--card-border);
             border-radius: 16px;
-            padding: 30px;
-            transition: transform 0.3s ease, border-color 0.3s ease;
+            padding: 25px;
             display: flex;
             flex-direction: column;
-            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease, opacity 0.3s ease;
         }
-
-        .prompt-card:hover {
-            transform: translateY(-5px);
-            border-color: rgba(255, 255, 255, 0.2);
-        }
-
-        .card-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .card-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-        }
-
+        .prompt-card.hide { display: none; }
+        .prompt-card:hover { border-color: rgba(255, 255, 255, 0.3); transform: translateY(-3px); }
+        
+        .card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 15px; }
+        .card-title { font-size: 1.1rem; font-weight: 600; }
         .prompt-text {
-            background: rgba(0, 0, 0, 0.5);
-            padding: 15px;
-            border-radius: 8px;
-            color: var(--text-muted);
-            font-family: monospace;
-            font-size: 0.9rem;
-            margin-bottom: 20px;
-            flex-grow: 1;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(0, 0, 0, 0.5); padding: 15px; border-radius: 8px;
+            color: var(--text-muted); font-family: monospace; font-size: 0.85rem;
+            margin-bottom: 20px; flex-grow: 1; border: 1px solid rgba(255,255,255,0.05);
         }
-
+        
         .copy-btn {
-            background: transparent;
-            color: var(--text-main);
-            border: 1px solid var(--card-border);
-            padding: 12px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.2s ease;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 8px;
+            background: transparent; color: var(--text-main); border: 1px solid var(--card-border);
+            padding: 12px; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.2s;
         }
+        .copy-btn:hover { background: var(--text-main); color: var(--bg-color); }
+        .copy-btn.copied { background: var(--gemini-gradient); color: white; border: none; }
 
-        .copy-btn:hover {
-            background: var(--text-main);
-            color: var(--bg-color);
+        /* Real Formspree CTA Section */
+        .cta-section {
+            width: 100%; max-width: 800px; background: var(--card-bg);
+            border: 1px solid var(--gemini-gradient); border-radius: 16px; padding: 40px;
+            text-align: center; position: relative; overflow: hidden;
         }
-
-        .copy-btn.copied {
-            background: var(--gemini-gradient);
-            color: white;
-            border: none;
+        .cta-section::before {
+            content: ""; position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px;
+            background: var(--gemini-gradient); z-index: -1; border-radius: 18px; opacity: 0.5;
         }
-
-        /* Contribution Section */
-        .contribution-section {
-            width: 100%;
-            max-width: 800px;
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 16px;
-            padding: 40px;
-            margin-bottom: 60px;
-            text-align: center;
-        }
-
-        .contribution-section h2 {
-            font-size: 1.8rem;
-            margin-bottom: 10px;
-        }
-
-        .contribution-section p {
-            color: var(--text-muted);
-            margin-bottom: 30px;
-            font-size: 0.95rem;
-        }
-
-        .form-group {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-
-        @media (max-width: 600px) {
-            .form-group { grid-template-columns: 1fr; }
-        }
-
+        .cta-section h2 { font-size: 2rem; margin-bottom: 10px; }
+        .cta-section p { color: var(--text-muted); margin-bottom: 30px; }
+        
         input, textarea {
-            width: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid var(--card-border);
-            color: var(--text-main);
-            padding: 15px;
-            border-radius: 8px;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.95rem;
-            outline: none;
-            transition: border-color 0.3s;
+            width: 100%; background: rgba(0, 0, 0, 0.8); border: 1px solid var(--card-border);
+            color: var(--text-main); padding: 15px; border-radius: 8px; margin-bottom: 15px;
+            font-family: 'Inter', sans-serif; outline: none;
         }
-
-        input:focus, textarea:focus {
-            border-color: #4285F4;
-        }
-
+        input:focus, textarea:focus { border-color: #4285F4; }
         .submit-btn {
-            background: var(--gemini-gradient);
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: opacity 0.3s;
-            width: 100%;
+            background: var(--gemini-gradient); color: white; border: none; padding: 15px;
+            border-radius: 8px; font-weight: 800; font-size: 1.1rem; cursor: pointer; width: 100%;
+            text-transform: uppercase; letter-spacing: 1px;
         }
 
-        .submit-btn:hover {
-            opacity: 0.9;
+        /* Floating CTA */
+        .floating-cta {
+            position: fixed; bottom: 30px; right: 30px; background: var(--text-main);
+            color: var(--bg-color); padding: 15px 25px; border-radius: 50px; font-weight: 800;
+            text-decoration: none; box-shadow: 0 4px 20px rgba(255,255,255,0.2);
+            transition: transform 0.3s; z-index: 100;
         }
+        .floating-cta:hover { transform: scale(1.05); }
 
-        .success-message {
-            display: none;
-            color: #81c995;
-            background: rgba(129, 201, 149, 0.1);
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 20px;
-            border: 1px solid #81c995;
-            font-weight: 600;
-        }
-
-        /* Footer */
-        .footer {
-            text-align: center;
-            color: var(--text-muted);
-            font-size: 0.85rem;
-            border-top: 1px solid var(--card-border);
-            padding-top: 20px;
-            width: 100%;
-            max-width: 800px;
-        }
-
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <h1>Welcome to <span class="gradient-text">Swinburne Quantum Prompts</span></h1>
-        <p>Hack Your Deadline cùng Gemini - Giải pháp AI tối ưu dành riêng cho thế hệ K8</p>
+        <h1>Swinburne <span class="gradient-text">Quantum Prompts</span></h1>
+        <p>12 Ngành học. Hàng ngàn giờ tiết kiệm. Hack Your Deadline ngay hôm nay!</p>
     </div>
 
-    <div class="steps">
-        <div class="step-item"><span class="step-number">1</span> Chọn ngành học</div>
-        <div class="step-item"><span class="step-number">2</span> Copy câu lệnh</div>
-        <div class="step-item"><span class="step-number">3</span> Dán vào Gemini & Điền [...] </div>
+    <!-- Filter System -->
+    <div class="filter-container">
+        <button class="filter-btn active" onclick="filterSelection('all')">Tất cả</button>
+        <button class="filter-btn" onclick="filterSelection('tech')">IT & Tech</button>
+        <button class="filter-btn" onclick="filterSelection('business')">Kinh tế & Phân tích</button>
+        <button class="filter-btn" onclick="filterSelection('creative')">Sáng tạo & Truyền thông</button>
+        <button class="filter-btn" onclick="filterSelection('science')">Học thuật & Khoa học</button>
     </div>
 
     <div class="prompt-container">
-        <!-- Card 1: Business -->
-        <div class="prompt-card">
-            <div class="card-header">
-                <span style="font-size: 1.5rem;">📊</span>
-                <div class="card-title">Kinh tế & Truyền thông</div>
-            </div>
-            <div class="prompt-text" id="prompt-business">
-                Đóng vai một Giám đốc Digital Marketing thực chiến, hãy lập khung chiến lược 3 giai đoạn cho chiến dịch ra mắt [Tên sản phẩm/dự án]. Yêu cầu: Áp dụng mô hình [Tên mô hình], tối ưu ngân sách trên nền tảng [Tiktok/Facebook] và đề xuất 2 ý tưởng Marketing Du kích.
-            </div>
-            <button class="copy-btn" onclick="copyPrompt('prompt-business', this)">Copy Prompt</button>
+        <!-- 1. Digital Marketing (Creative/Business) -->
+        <div class="prompt-card filter-business filter-creative">
+            <div class="card-header"><span style="font-size: 1.5rem;">📈</span><div class="card-title">Digital Marketing</div></div>
+            <div class="prompt-text" id="p-1">Đóng vai Giám đốc Marketing, lập khung chiến lược 3 giai đoạn ra mắt [Tên sản phẩm]. Áp dụng mô hình AIDA, tối ưu ngân sách trên TikTok và đề xuất 2 ý tưởng Marketing Du kích.</div>
+            <button class="copy-btn" onclick="copyPrompt('p-1', this)">Copy Prompt</button>
         </div>
 
-        <!-- Card 2: IT -->
-        <div class="prompt-card">
-            <div class="card-header">
-                <span style="font-size: 1.5rem;">💻</span>
-                <div class="card-title">Công nghệ Thông tin</div>
-            </div>
-            <div class="prompt-text" id="prompt-it">
-                Đóng vai một Senior Developer, hãy phân tích đoạn code C++ sau: [Dán code]. Tìm ra 'nút thắt cổ chai' khiến code bị lỗi Time Limit Exceeded, tối ưu hóa độ phức tạp thuật toán và giải thích logic sửa đổi ngắn gọn.
-            </div>
-            <button class="copy-btn" onclick="copyPrompt('prompt-it', this)">Copy Prompt</button>
+        <!-- 2. Software Engineering (Tech) -->
+        <div class="prompt-card filter-tech">
+            <div class="card-header"><span style="font-size: 1.5rem;">💻</span><div class="card-title">Software Engineering</div></div>
+            <div class="prompt-text" id="p-2">Đóng vai Senior Developer, phân tích code [Ngôn ngữ] sau: [Dán Code]. Tìm 'bottleneck' gây lỗi Time Limit Exceeded, tối ưu độ phức tạp thuật toán và giải thích logic sửa đổi.</div>
+            <button class="copy-btn" onclick="copyPrompt('p-2', this)">Copy Prompt</button>
         </div>
 
-        <!-- Card 3: Academic -->
-        <div class="prompt-card">
-            <div class="card-header">
-                <span style="font-size: 1.5rem;">🎓</span>
-                <div class="card-title">Kỹ năng Học thuật</div>
-            </div>
-            <div class="prompt-text" id="prompt-academic">
-                Hãy nâng cấp đoạn văn bản tiếng Anh thô sau thành giọng văn học thuật chuẩn đại học: [Dán văn bản]. Yêu cầu: Dùng cấu trúc câu phức, từ vựng chuyên ngành [Tên chuyên ngành] và giữ văn phong khách quan.
-            </div>
-            <button class="copy-btn" onclick="copyPrompt('prompt-academic', this)">Copy Prompt</button>
+        <!-- 3. Data Science (Tech/Business) -->
+        <div class="prompt-card filter-tech filter-business">
+            <div class="card-header"><span style="font-size: 1.5rem;">📊</span><div class="card-title">Data Analytics</div></div>
+            <div class="prompt-text" id="p-3">Đóng vai Data Analyst, viết truy vấn SQL trích xuất [Mục tiêu dữ liệu] từ bảng [Tên bảng]. Giải thích logic tối ưu hóa Query để không làm treo hệ thống cơ sở dữ liệu.</div>
+            <button class="copy-btn" onclick="copyPrompt('p-3', this)">Copy Prompt</button>
         </div>
 
-        <!-- Card 4: Design (NEW) -->
-        <div class="prompt-card">
-            <div class="card-header">
-                <span style="font-size: 1.5rem;">🎨</span>
-                <div class="card-title">Thiết kế & Mỹ thuật</div>
-            </div>
-            <div class="prompt-text" id="prompt-design">
-                Đóng vai một Art Director, hãy gợi ý 3 concept thiết kế (Visual Concept) cho chiến dịch về [Chủ đề]. Yêu cầu chi tiết về bảng màu (Color Palette), định hướng hình ảnh và cấp cho tôi prompt tạo ảnh bằng AI.
-            </div>
-            <button class="copy-btn" onclick="copyPrompt('prompt-design', this)">Copy Prompt</button>
+        <!-- 4. Law & Policy (Science) -->
+        <div class="prompt-card filter-science">
+            <div class="card-header"><span style="font-size: 1.5rem;">⚖️</span><div class="card-title">Luật & Pháp lý</div></div>
+            <div class="prompt-text" id="p-4">Đóng vai Chuyên viên Pháp lý, tóm tắt các rủi ro cốt lõi trong hợp đồng sau: [Dán hợp đồng]. Đề xuất 3 điều khoản bổ sung để bảo vệ quyền lợi tối đa cho bên [Tên bên].</div>
+            <button class="copy-btn" onclick="copyPrompt('p-4', this)">Copy Prompt</button>
         </div>
 
-        <!-- Card 5: Engineering (NEW) -->
-        <div class="prompt-card">
-            <div class="card-header">
-                <span style="font-size: 1.5rem;">⚙️</span>
-                <div class="card-title">Kỹ thuật & Điện tử</div>
-            </div>
-            <div class="prompt-text" id="prompt-eng">
-                Đóng vai một Kỹ sư, hãy giải thích nguyên lý hoạt động của [Tên mạch/Hệ thống] một cách dễ hiểu, kèm theo các công thức tính toán cốt lõi và ví dụ ứng dụng thực tế trong công nghiệp hiện đại.
-            </div>
-            <button class="copy-btn" onclick="copyPrompt('prompt-eng', this)">Copy Prompt</button>
+        <!-- 5. Academic Writing (Science) -->
+        <div class="prompt-card filter-science">
+            <div class="card-header"><span style="font-size: 1.5rem;">🎓</span><div class="card-title">Academic Writing</div></div>
+            <div class="prompt-text" id="p-5">Nâng cấp đoạn văn tiếng Anh thô sau thành giọng văn học thuật (Academic Tone): [Dán văn bản]. Yêu cầu dùng cấu trúc câu phức, từ vựng chuyên ngành [Ngành học].</div>
+            <button class="copy-btn" onclick="copyPrompt('p-5', this)">Copy Prompt</button>
+        </div>
+
+        <!-- 6. Graphic Design (Creative) -->
+        <div class="prompt-card filter-creative">
+            <div class="card-header"><span style="font-size: 1.5rem;">🎨</span><div class="card-title">Design & Art</div></div>
+            <div class="prompt-text" id="p-6">Đóng vai Art Director, gợi ý 3 Visual Concept cho chiến dịch [Chủ đề]. Cung cấp bảng màu chi tiết (Hex code) và cấp cho tôi 1 prompt tiếng Anh chuẩn để tạo ảnh bằng Midjourney/Gemini.</div>
+            <button class="copy-btn" onclick="copyPrompt('p-6', this)">Copy Prompt</button>
+        </div>
+
+        <!-- 7. Psychology (Science) -->
+        <div class="prompt-card filter-science">
+            <div class="card-header"><span style="font-size: 1.5rem;">🧠</span><div class="card-title">Tâm lý học</div></div>
+            <div class="prompt-text" id="p-7">Đóng vai Trợ lý Nghiên cứu, thiết kế 5 câu hỏi phỏng vấn sâu (In-depth Interview) cho đề tài [Tên đề tài]. Đảm bảo tính trung lập, không dẫn dắt tâm lý người trả lời.</div>
+            <button class="copy-btn" onclick="copyPrompt('p-7', this)">Copy Prompt</button>
+        </div>
+
+        <!-- 8. Hospitality (Business) -->
+        <div class="prompt-card filter-business">
+            <div class="card-header"><span style="font-size: 1.5rem;">🏨</span><div class="card-title">Hospitality & Tourism</div></div>
+            <div class="prompt-text" id="p-8">Đóng vai Quản lý Khách sạn 5 sao, viết email bằng tiếng Anh phản hồi khách hàng phàn nàn về [Vấn đề]. Áp dụng chuẩn SOP quốc tế: Đồng cảm, Giải thích và Đề xuất đền bù.</div>
+            <button class="copy-btn" onclick="copyPrompt('p-8', this)">Copy Prompt</button>
         </div>
         
-        <!-- Card 6: Translation (NEW) -->
-        <div class="prompt-card">
-            <div class="card-header">
-                <span style="font-size: 1.5rem;">🌐</span>
-                <div class="card-title">Ngôn ngữ & Biên dịch</div>
-            </div>
-            <div class="prompt-text" id="prompt-lang">
-                Đóng vai một Biên dịch viên chuyên nghiệp, hãy dịch đoạn hội thoại sau sang tiếng [Ngôn ngữ đích]: [Dán hội thoại]. Yêu cầu: Giữ nguyên sắc thái văn hóa (cultural nuances) và sử dụng từ lóng (slang) tự nhiên nhất.
-            </div>
-            <button class="copy-btn" onclick="copyPrompt('prompt-lang', this)">Copy Prompt</button>
+        <!-- 9. Medicine/Healthcare (Science) -->
+        <div class="prompt-card filter-science">
+            <div class="card-header"><span style="font-size: 1.5rem;">⚕️</span><div class="card-title">Y tế & Sức khỏe</div></div>
+            <div class="prompt-text" id="p-9">Tóm tắt báo cáo y khoa sau thành ngôn ngữ phổ thông cho bệnh nhân: [Dán báo cáo]. Giữ nguyên tính chính xác của thuật ngữ bệnh học nhưng giải thích bằng ví dụ dễ hiểu.</div>
+            <button class="copy-btn" onclick="copyPrompt('p-9', this)">Copy Prompt</button>
+        </div>
+
+        <!-- 10. Architecture (Creative/Tech) -->
+        <div class="prompt-card filter-creative filter-tech">
+            <div class="card-header"><span style="font-size: 1.5rem;">🏗️</span><div class="card-title">Kiến trúc & Xây dựng</div></div>
+            <div class="prompt-text" id="p-10">Phác thảo ý tưởng tổ chức không gian cho dự án [Loại công trình] diện tích [X m2] theo phong cách [Tên phong cách]. Đề xuất các vật liệu eco-friendly phù hợp khí hậu nhiệt đới.</div>
+            <button class="copy-btn" onclick="copyPrompt('p-10', this)">Copy Prompt</button>
+        </div>
+        
+        <!-- 11. International Economics (Business) -->
+        <div class="prompt-card filter-business">
+            <div class="card-header"><span style="font-size: 1.5rem;">🌍</span><div class="card-title">Kinh tế Quốc tế</div></div>
+            <div class="prompt-text" id="p-11">Phân tích tác động của [Sự kiện/Chính sách] đến chuỗi cung ứng toàn cầu ngành [Tên ngành]. Đưa ra 3 kịch bản dự báo (Tích cực, Tiêu cực, Cân bằng) trong ngắn hạn.</div>
+            <button class="copy-btn" onclick="copyPrompt('p-11', this)">Copy Prompt</button>
+        </div>
+
+        <!-- 12. Translation (Creative) -->
+        <div class="prompt-card filter-creative">
+            <div class="card-header"><span style="font-size: 1.5rem;">🌐</span><div class="card-title">Biên & Phiên dịch</div></div>
+            <div class="prompt-text" id="p-12">Dịch đoạn hội thoại sau sang tiếng [Ngôn ngữ đích]: [Dán văn bản]. Yêu cầu đặc biệt: Giữ nguyên sắc thái châm biếm (sarcasm) và sử dụng từ lóng tự nhiên của người bản xứ.</div>
+            <button class="copy-btn" onclick="copyPrompt('p-12', this)">Copy Prompt</button>
         </div>
     </div>
 
-    <!-- Contribution Form Section (NEW) -->
-    <div class="contribution-section">
-        <h2>Đóng góp Prompt của bạn</h2>
-        <p>Bạn đang sở hữu một câu lệnh Gemini cực đỉnh? Hãy chia sẻ để cùng xây dựng cộng đồng Swinburne bứt phá!</p>
-        <form id="contribution-form" onsubmit="submitForm(event)">
-            <div class="form-group">
-                <input type="text" id="userName" placeholder="Tên của bạn (hoặc Nickname)" required>
-                <input type="text" id="userMajor" placeholder="Ngành học của bạn" required>
+    <!-- Active Formspree Integration -->
+    <div class="cta-section" id="contribute">
+        <h2>🔥 Trở thành một phần của Quantum Leaps</h2>
+        <p>Gửi Prompt độc quyền của bạn. Sau khi duyệt, tên của bạn sẽ được vinh danh trên hệ thống này!</p>
+        <!-- Thay link 'https://formspree.io/f/MÃ_CỦA_BẠN' bằng link thật khi bạn đăng ký Formspree -->
+        <form action="https://formspree.io/f/myeyezrb" method="POST">
+            <div style="display: flex; gap: 15px;">
+                <input type="text" name="Tên" placeholder="Tên của bạn" required>
+                <input type="text" name="Ngành học" placeholder="Ngành học" required>
             </div>
-            <textarea id="userPrompt" rows="4" placeholder="Dán Prompt hoặc góp ý của bạn vào đây..." required></textarea>
-            <button type="submit" class="submit-btn">Gửi Đóng Góp</button>
+            <textarea name="Prompt_Đóng_góp" rows="4" placeholder="Dán câu lệnh Gemini tâm đắc nhất của bạn vào đây..." required></textarea>
+            <button type="submit" class="submit-btn">GỬI PROMPT CỦA TÔI</button>
         </form>
-        <div id="success-msg" class="success-message">
-            Cảm ơn bạn! Đóng góp của bạn đã được ghi nhận và sẽ được cập nhật sớm nhất.
-        </div>
     </div>
 
-    <div class="footer">
+    <a href="#contribute" class="floating-cta">Góp Prompt Ngay ⚡</a>
+
+    <div style="text-align: center; color: var(--text-muted); margin-top: 50px; font-size: 0.85rem;">
         <p>Initiated by <strong>Lưu Minh Khôi</strong> - Candidate for Google Student Ambassador 2026</p>
     </div>
 
-    <!-- JavaScript Scripts -->
     <script>
-        // Copy to clipboard function
-        function copyPrompt(elementId, buttonElement) {
-            const textToCopy = document.getElementById(elementId).innerText;
-            navigator.clipboard.writeText(textToCopy).then(() => {
-                buttonElement.innerText = '✓ Copied!';
-                buttonElement.classList.add('copied');
-                setTimeout(() => {
-                    buttonElement.innerText = 'Copy Prompt';
-                    buttonElement.classList.remove('copied');
-                }, 2000);
-            }).catch(err => {
-                console.error('Failed to copy text: ', err);
+        // Copy Logic
+        function copyPrompt(elementId, btn) {
+            const text = document.getElementById(elementId).innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                btn.innerText = '✓ Copied!'; btn.classList.add('copied');
+                setTimeout(() => { btn.innerText = 'Copy Prompt'; btn.classList.remove('copied'); }, 2000);
             });
         }
 
-        // Form Submission Simulation
-        function submitForm(event) {
-            event.preventDefault(); // Ngăn trang bị reload
-            
-            // Ẩn form và hiện lời cảm ơn
-            document.getElementById('contribution-form').style.display = 'none';
-            document.getElementById('success-msg').style.display = 'block';
+        // Filtering Logic
+        filterSelection("all");
+        function filterSelection(c) {
+            var x, i;
+            x = document.getElementsByClassName("prompt-card");
+            if (c == "all") c = "";
+            for (i = 0; i < x.length; i++) {
+                x[i].classList.remove("hide");
+                if (x[i].className.indexOf(c) == -1) x[i].classList.add("hide");
+            }
+            // Update Active Button
+            var btns = document.getElementsByClassName("filter-btn");
+            for (i = 0; i < btns.length; i++) {
+                btns[i].classList.remove("active");
+                if(btns[i].getAttribute('onclick').includes(c || 'all')) btns[i].classList.add("active");
+            }
         }
     </script>
 </body>
