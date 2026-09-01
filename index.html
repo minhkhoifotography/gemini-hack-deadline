@@ -170,6 +170,85 @@
             border: none;
         }
 
+        /* Contribution Section */
+        .contribution-section {
+            width: 100%;
+            max-width: 800px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 60px;
+            text-align: center;
+        }
+
+        .contribution-section h2 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        .contribution-section p {
+            color: var(--text-muted);
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+        }
+
+        .form-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .form-group { grid-template-columns: 1fr; }
+        }
+
+        input, textarea {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--card-border);
+            color: var(--text-main);
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, textarea:focus {
+            border-color: #4285F4;
+        }
+
+        .submit-btn {
+            background: var(--gemini-gradient);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: opacity 0.3s;
+            width: 100%;
+        }
+
+        .submit-btn:hover {
+            opacity: 0.9;
+        }
+
+        .success-message {
+            display: none;
+            color: #81c995;
+            background: rgba(129, 201, 149, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border: 1px solid #81c995;
+            font-weight: 600;
+        }
+
         /* Footer */
         .footer {
             text-align: center;
@@ -202,49 +281,93 @@
     </div>
 
     <div class="prompt-container">
-        <!-- Card 1: Business & Media -->
+        <!-- Card 1: Business -->
         <div class="prompt-card">
             <div class="card-header">
                 <span style="font-size: 1.5rem;">📊</span>
                 <div class="card-title">Kinh tế & Truyền thông</div>
             </div>
             <div class="prompt-text" id="prompt-business">
-                Đóng vai một Giám đốc Digital Marketing thực chiến, hãy lập khung chiến lược 3 giai đoạn cho chiến dịch ra mắt [Tên sản phẩm/dự án]. Yêu cầu: Áp dụng mô hình [Tên mô hình: AIDA/SWOT...], tối ưu ngân sách trên nền tảng [Tiktok/Facebook] và đề xuất 2 ý tưởng Marketing Du kích.
+                Đóng vai một Giám đốc Digital Marketing thực chiến, hãy lập khung chiến lược 3 giai đoạn cho chiến dịch ra mắt [Tên sản phẩm/dự án]. Yêu cầu: Áp dụng mô hình [Tên mô hình], tối ưu ngân sách trên nền tảng [Tiktok/Facebook] và đề xuất 2 ý tưởng Marketing Du kích.
             </div>
-            <button class="copy-btn" onclick="copyPrompt('prompt-business', this)">
-                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-                Copy Prompt
-            </button>
+            <button class="copy-btn" onclick="copyPrompt('prompt-business', this)">Copy Prompt</button>
         </div>
 
-        <!-- Card 2: IT / Computer Science -->
+        <!-- Card 2: IT -->
         <div class="prompt-card">
             <div class="card-header">
                 <span style="font-size: 1.5rem;">💻</span>
                 <div class="card-title">Công nghệ Thông tin</div>
             </div>
             <div class="prompt-text" id="prompt-it">
-                Đóng vai một Senior Developer, hãy phân tích đoạn code C++ sau của tôi: [Dán code vào đây]. Tìm ra 'nút thắt cổ chai' khiến code bị lỗi Time Limit Exceeded, tối ưu hóa độ phức tạp thuật toán và giải thích logic sửa đổi một cách ngắn gọn.
+                Đóng vai một Senior Developer, hãy phân tích đoạn code C++ sau: [Dán code]. Tìm ra 'nút thắt cổ chai' khiến code bị lỗi Time Limit Exceeded, tối ưu hóa độ phức tạp thuật toán và giải thích logic sửa đổi ngắn gọn.
             </div>
-            <button class="copy-btn" onclick="copyPrompt('prompt-it', this)">
-                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-                Copy Prompt
-            </button>
+            <button class="copy-btn" onclick="copyPrompt('prompt-it', this)">Copy Prompt</button>
         </div>
 
-        <!-- Card 3: Academic Writing -->
+        <!-- Card 3: Academic -->
         <div class="prompt-card">
             <div class="card-header">
                 <span style="font-size: 1.5rem;">🎓</span>
                 <div class="card-title">Kỹ năng Học thuật</div>
             </div>
             <div class="prompt-text" id="prompt-academic">
-                Hãy nâng cấp đoạn văn bản tiếng Anh thô sau đây thành giọng văn học thuật (Academic Tone) chuẩn đại học: [Dán văn bản]. Yêu cầu: Dùng cấu trúc câu phức, từ vựng chuyên ngành [Tên chuyên ngành] và giữ văn phong khách quan.
+                Hãy nâng cấp đoạn văn bản tiếng Anh thô sau thành giọng văn học thuật chuẩn đại học: [Dán văn bản]. Yêu cầu: Dùng cấu trúc câu phức, từ vựng chuyên ngành [Tên chuyên ngành] và giữ văn phong khách quan.
             </div>
-            <button class="copy-btn" onclick="copyPrompt('prompt-academic', this)">
-                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-                Copy Prompt
-            </button>
+            <button class="copy-btn" onclick="copyPrompt('prompt-academic', this)">Copy Prompt</button>
+        </div>
+
+        <!-- Card 4: Design (NEW) -->
+        <div class="prompt-card">
+            <div class="card-header">
+                <span style="font-size: 1.5rem;">🎨</span>
+                <div class="card-title">Thiết kế & Mỹ thuật</div>
+            </div>
+            <div class="prompt-text" id="prompt-design">
+                Đóng vai một Art Director, hãy gợi ý 3 concept thiết kế (Visual Concept) cho chiến dịch về [Chủ đề]. Yêu cầu chi tiết về bảng màu (Color Palette), định hướng hình ảnh và cấp cho tôi prompt tạo ảnh bằng AI.
+            </div>
+            <button class="copy-btn" onclick="copyPrompt('prompt-design', this)">Copy Prompt</button>
+        </div>
+
+        <!-- Card 5: Engineering (NEW) -->
+        <div class="prompt-card">
+            <div class="card-header">
+                <span style="font-size: 1.5rem;">⚙️</span>
+                <div class="card-title">Kỹ thuật & Điện tử</div>
+            </div>
+            <div class="prompt-text" id="prompt-eng">
+                Đóng vai một Kỹ sư, hãy giải thích nguyên lý hoạt động của [Tên mạch/Hệ thống] một cách dễ hiểu, kèm theo các công thức tính toán cốt lõi và ví dụ ứng dụng thực tế trong công nghiệp hiện đại.
+            </div>
+            <button class="copy-btn" onclick="copyPrompt('prompt-eng', this)">Copy Prompt</button>
+        </div>
+        
+        <!-- Card 6: Translation (NEW) -->
+        <div class="prompt-card">
+            <div class="card-header">
+                <span style="font-size: 1.5rem;">🌐</span>
+                <div class="card-title">Ngôn ngữ & Biên dịch</div>
+            </div>
+            <div class="prompt-text" id="prompt-lang">
+                Đóng vai một Biên dịch viên chuyên nghiệp, hãy dịch đoạn hội thoại sau sang tiếng [Ngôn ngữ đích]: [Dán hội thoại]. Yêu cầu: Giữ nguyên sắc thái văn hóa (cultural nuances) và sử dụng từ lóng (slang) tự nhiên nhất.
+            </div>
+            <button class="copy-btn" onclick="copyPrompt('prompt-lang', this)">Copy Prompt</button>
+        </div>
+    </div>
+
+    <!-- Contribution Form Section (NEW) -->
+    <div class="contribution-section">
+        <h2>Đóng góp Prompt của bạn</h2>
+        <p>Bạn đang sở hữu một câu lệnh Gemini cực đỉnh? Hãy chia sẻ để cùng xây dựng cộng đồng Swinburne bứt phá!</p>
+        <form id="contribution-form" onsubmit="submitForm(event)">
+            <div class="form-group">
+                <input type="text" id="userName" placeholder="Tên của bạn (hoặc Nickname)" required>
+                <input type="text" id="userMajor" placeholder="Ngành học của bạn" required>
+            </div>
+            <textarea id="userPrompt" rows="4" placeholder="Dán Prompt hoặc góp ý của bạn vào đây..." required></textarea>
+            <button type="submit" class="submit-btn">Gửi Đóng Góp</button>
+        </form>
+        <div id="success-msg" class="success-message">
+            Cảm ơn bạn! Đóng góp của bạn đã được ghi nhận và sẽ được cập nhật sớm nhất.
         </div>
     </div>
 
@@ -252,27 +375,30 @@
         <p>Initiated by <strong>Lưu Minh Khôi</strong> - Candidate for Google Student Ambassador 2026</p>
     </div>
 
-    <!-- JavaScript for Copy Functionality -->
+    <!-- JavaScript Scripts -->
     <script>
+        // Copy to clipboard function
         function copyPrompt(elementId, buttonElement) {
-            // Get the text from the prompt container
             const textToCopy = document.getElementById(elementId).innerText;
-            
-            // Copy to clipboard
             navigator.clipboard.writeText(textToCopy).then(() => {
-                // Change button state to show success
-                const originalContent = buttonElement.innerHTML;
-                buttonElement.innerHTML = '✓ Copied!';
+                buttonElement.innerText = '✓ Copied!';
                 buttonElement.classList.add('copied');
-                
-                // Revert back after 2 seconds
                 setTimeout(() => {
-                    buttonElement.innerHTML = originalContent;
+                    buttonElement.innerText = 'Copy Prompt';
                     buttonElement.classList.remove('copied');
                 }, 2000);
             }).catch(err => {
                 console.error('Failed to copy text: ', err);
             });
+        }
+
+        // Form Submission Simulation
+        function submitForm(event) {
+            event.preventDefault(); // Ngăn trang bị reload
+            
+            // Ẩn form và hiện lời cảm ơn
+            document.getElementById('contribution-form').style.display = 'none';
+            document.getElementById('success-msg').style.display = 'block';
         }
     </script>
 </body>
