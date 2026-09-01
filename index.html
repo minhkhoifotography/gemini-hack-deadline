@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Swinburne Quantum Hub | Global AI Prompts</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- GỌI DATABASE 410 PROMPTS TỪ FILE BÊN NGOÀI -->
-    <script src="database.js"></script>
+    <!-- KHÔNG CẦN GỌI DATABASE.JS NỮA, DỮ LIỆU SẼ ĐƯỢC KÉO TỪ CLOUD -->
     <style>
         /* --- CORE VARIABLES & RESET --- */
         :root {
@@ -152,6 +151,9 @@
         @keyframes fadein { from { bottom: 0; opacity: 0; } to { bottom: 30px; opacity: 1; } }
         @keyframes fadeout { from { bottom: 30px; opacity: 1; } to { bottom: 0; opacity: 0; } }
 
+        /* Loader */
+        .loading-overlay { display: flex; justify-content: center; align-items: center; padding: 50px; font-weight: 600; color: var(--gemini-purple); }
+
         @media (max-width: 900px) {
             .sidebar { position: absolute; left: -100%; }
             .sidebar.open { left: 0; box-shadow: 20px 0 50px rgba(0,0,0,0.8); }
@@ -173,7 +175,7 @@
 
     <!-- SIDEBAR -->
     <div class="sidebar" id="sidebar">
-        <!-- CHỨC NĂNG BẤM VÀO LOGO QUAY VỀ TRANG CHỦ -->
+        <!-- LOGO CLICK VỀ TRANG CHỦ -->
         <div class="logo-area" onclick="resetToHome()">
             ✦ Swinburne <span>Quantum</span>
         </div>
@@ -214,8 +216,8 @@
                 <h1 id="ui-hero-title">Hệ sinh thái AI <br>dành cho Sinh viên Quốc tế</h1>
                 <p id="ui-hero-desc">Khám phá kho tàng Prompt AI chuyên sâu nhất, được cấu trúc hóa cho từng chuyên ngành hẹp. Giao diện và câu lệnh tự động biên dịch, biến Gemini thành cố vấn chuyên môn Đa ngôn ngữ của bạn.</p>
                 <div class="hero-stats">
-                    <span id="statMajors">0 Nhóm ngành lớn</span> • 
-                    <span id="statPrompts">400+ Prompts</span>
+                    <span id="statMajors">Đang đồng bộ Cloud...</span> • 
+                    <span id="statPrompts">Đang đồng bộ Cloud...</span>
                 </div>
             </div>
 
@@ -225,7 +227,7 @@
                 <span id="resultCount" style="font-size:0.8rem; background: transparent; color: var(--text-muted)"></span>
             </div>
             <div class="grid-container" id="gridContainer">
-                <!-- Rendered by JS -->
+                <div class="loading-overlay">✦ Đang kết nối tới máy chủ Firebase Cloud...</div>
             </div>
 
             <!-- PRO FOOTER -->
@@ -261,18 +263,15 @@
             <div class="fb-body">
                 <p id="ui-fb-desc">Cộng đồng này lớn mạnh nhờ bạn. Hãy điền đầy đủ thông tin để hệ thống có thể lưu trữ và vinh danh bạn một cách chính xác nhất.</p>
                 
-                <div class="target-badges" id="fbBadges">
-                    <!-- Injected by JS -->
-                </div>
+                <div class="target-badges" id="fbBadges"></div>
 
-                <form action="https://formspree.io/f/YOUR_FORM_ID_HERE" method="POST">
-                    <!-- Data Ẩn -->
+                <!-- BẢO MẬT: THAY LINK FORMSPREE CỦA BẠN VÀO ĐÂY -->
+                <form action="YOUR_FORMSPREE_LINK_HERE" method="POST">
                     <input type="hidden" name="Main_Category" id="formMainCat">
                     <input type="hidden" name="Sub_Category" id="formSubCat">
                     <input type="hidden" name="Target_Prompt" id="formPromptTitle">
                     <input type="hidden" name="Language" id="formLanguage">
 
-                    <!-- Form Chi Tiết Nâng Cấp -->
                     <div class="form-group">
                         <label id="ui-fb-uni">Trường Đại học (University)</label>
                         <input type="text" name="University" required placeholder="VD: Swinburne University of Technology">
@@ -316,13 +315,12 @@
 
     <div id="toast">Đã sao chép câu lệnh!</div>
 
-    <!-- JAVASCRIPT LOGIC -->
+    <!-- TẠO BIẾN TOÀN CỤC ĐỂ UI DÙNG -->
     <script>
-        if (typeof promptDB === 'undefined') {
-            alert("LỖI: Bạn chưa lưu file database.js! Hãy đảm bảo đã tải file database có chứa 410 prompts để web hoạt động.");
-        }
+        window.promptDB = [];
+        window.currentLang = 'vi';
+        window.currentFilter = 'all';
 
-        // --- 1. LOCALIZED DICTIONARY ---
         const uiTrans = {
             vi: {
                 badge: "Dự án Mã nguồn mở Toàn cầu", title: "Hệ sinh thái AI <br>dành cho Sinh viên Quốc tế", desc: "Khám phá kho tàng Prompt AI chuyên sâu nhất, được cấu trúc hóa cho từng chuyên ngành hẹp. Giao diện và câu lệnh tự động biên dịch, biến Gemini thành cố vấn chuyên môn Đa ngôn ngữ của bạn.", search: "Tìm kiếm prompt, chuyên ngành...", btnContribute: "Góp Prompt", copyBtn: "Sao chép lệnh", footerDesc: "Nền tảng tri thức mở kết hợp sức mạnh của Trí tuệ Nhân tạo, dành riêng cho thế hệ sinh viên bứt phá (Quantum Leaps).", toast: "Đã sao chép câu lệnh!", fbTitle: "Đóng góp Prompt", fbDesc: "Cộng đồng này lớn mạnh nhờ bạn. Hãy điền đầy đủ thông tin để hệ thống có thể lưu trữ và vinh danh bạn một cách chính xác nhất.", fbUni: "Trường Đại học (University)", fbName: "Họ và Tên", fbID: "Mã số Sinh viên", fbMajor: "Ngành học", fbSubMajor: "Chuyên ngành", fbContent: "Nội dung câu lệnh (Prompt)", fbBtn: "Gửi Lên Hệ Thống", allPrompts: "Tất cả Prompts", searchResult: "Kết quả tìm kiếm", devRole: "Thiết kế & Lập trình bởi", devTitle: "Ứng cử viên Đại sứ Sinh viên Google 2026", devSub: "(Cựu học sinh chuyên Tin - THPT chuyên Lê Quý Đôn)", statMajors: " Nhóm ngành lớn"
@@ -352,18 +350,14 @@
             "Khoa học Tiên tiến & Tương lai": { en: "Advanced Sciences", zh: "先进科学", de: "Fortgeschrittene Wissenschaften", fr: "Sciences Avancées" }
         };
 
-        let currentLang = 'vi';
-        let currentFilter = 'all';
-
         function getCatName(mainKey, lang) {
             if(lang === 'vi') return mainKey;
             return catTrans[mainKey] ? catTrans[mainKey][lang] : mainKey;
         }
 
-        // --- 2. RENDER LOGIC ---
         function renderSidebar() {
             const treeData = {};
-            promptDB.forEach(item => {
+            window.promptDB.forEach(item => {
                 if(!treeData[item.mainKey]) treeData[item.mainKey] = new Set();
                 treeData[item.mainKey].add(item.subKey);
             });
@@ -371,7 +365,7 @@
             let treeHTML = "";
             let groupIdx = 0;
             for (const [main, subs] of Object.entries(treeData)) {
-                let translatedMain = getCatName(main, currentLang);
+                let translatedMain = getCatName(main, window.currentLang);
                 treeHTML += `
                     <div class="cat-group">
                         <div class="cat-header" onclick="toggleCat(${groupIdx}, this)">${translatedMain} <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5l7 7-7 7"></path></svg></div>
@@ -384,15 +378,20 @@
                 groupIdx++;
             }
             document.getElementById('treeNav').innerHTML = treeHTML;
-            document.getElementById('statMajors').innerText = Object.keys(treeData).length + uiTrans[currentLang].statMajors;
+            document.getElementById('statMajors').innerText = Object.keys(treeData).length + uiTrans[window.currentLang].statMajors;
         }
 
         function renderCards(data) {
             const gridContainer = document.getElementById('gridContainer');
+            if (data.length === 0) {
+                gridContainer.innerHTML = '<div class="loading-overlay">Không tìm thấy dữ liệu.</div>';
+                return;
+            }
+            
             let html = "";
             data.forEach((p) => {
-                let localizedContent = p.content[currentLang] || p.content['en'] || p.content['vi'];
-                let translatedMain = getCatName(p.mainKey, currentLang);
+                let localizedContent = p.content[window.currentLang] || p.content['en'] || p.content['vi'];
+                let translatedMain = getCatName(p.mainKey, window.currentLang);
                 
                 html += `
                     <div class="card">
@@ -403,7 +402,7 @@
                         <div class="prompt-text" id="${p.id}">${localizedContent.prompt}</div>
                         <div class="card-actions">
                             <button class="btn-copy" onclick="copyPrompt('${p.id}')">
-                                <span class="txt">${uiTrans[currentLang].copyBtn}</span>
+                                <span class="txt">${uiTrans[window.currentLang].copyBtn}</span>
                                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
                             </button>
                             <button class="btn-card-feedback" title="Feedback" onclick="openFeedback('${p.id}', '${p.mainKey}', '${p.subKey}', '${localizedContent.title}')">
@@ -415,16 +414,14 @@
             });
             gridContainer.innerHTML = html;
             document.getElementById('resultCount').innerText = data.length + " Prompts";
-            document.getElementById('statPrompts').innerText = "400+ Prompts"; 
+            document.getElementById('statPrompts').innerText = window.promptDB.length + "+ Prompts"; 
         }
 
-        // --- 3. LANGUAGE & NAVIGATION ---
-        function changeLang(lang, btnElem) {
-            currentLang = lang;
+        window.changeLang = function(lang, btnElem) {
+            window.currentLang = lang;
             document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
             if(btnElem) btnElem.classList.add('active');
 
-            // Update UI
             document.getElementById('ui-hero-badge').innerHTML = uiTrans[lang].badge;
             document.getElementById('ui-hero-title').innerHTML = uiTrans[lang].title;
             document.getElementById('ui-hero-desc').innerHTML = uiTrans[lang].desc;
@@ -433,12 +430,10 @@
             document.getElementById('ui-footer-desc').innerHTML = uiTrans[lang].footerDesc;
             document.getElementById('toast').innerHTML = uiTrans[lang].toast;
             
-            // Footer
             document.getElementById('ui-dev-role').innerText = uiTrans[lang].devRole;
             document.getElementById('ui-dev-title').innerText = uiTrans[lang].devTitle;
             document.getElementById('ui-dev-sub').innerText = uiTrans[lang].devSub;
 
-            // Feedback Panel
             document.getElementById('ui-fb-title').innerHTML = `<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg> ${uiTrans[lang].fbTitle}`;
             document.getElementById('ui-fb-desc').innerHTML = uiTrans[lang].fbDesc;
             document.getElementById('ui-fb-uni').innerHTML = uiTrans[lang].fbUni;
@@ -449,49 +444,47 @@
             document.getElementById('ui-fb-content').innerHTML = uiTrans[lang].fbContent;
             document.getElementById('ui-fb-btn').innerHTML = `${uiTrans[lang].fbBtn} <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>`;
 
-            document.getElementById('currentViewTag').innerText = currentFilter === 'all' ? uiTrans[lang].allPrompts : currentFilter;
+            document.getElementById('currentViewTag').innerText = window.currentFilter === 'all' ? uiTrans[lang].allPrompts : window.currentFilter;
 
             renderSidebar();
-            if(currentFilter === 'all') {
-                renderCards(promptDB);
+            if(window.currentFilter === 'all') {
+                renderCards(window.promptDB);
             } else {
-                renderCards(promptDB.filter(p => p.subKey === currentFilter));
+                renderCards(window.promptDB.filter(p => p.subKey === window.currentFilter));
             }
         }
 
-        // RESET TRANG KHI BẤM LOGO
-        function resetToHome() {
-            currentFilter = 'all';
+        window.resetToHome = function() {
+            window.currentFilter = 'all';
             document.getElementById('searchInput').value = '';
             document.querySelectorAll('.sub-cat-item').forEach(el => el.classList.remove('active'));
-            changeLang(currentLang, document.querySelector('.lang-btn.active'));
+            window.changeLang(window.currentLang, document.querySelector('.lang-btn.active'));
             document.getElementById('mainContent').scrollTo(0,0);
         }
 
-        // --- 4. INTERACTIONS ---
-        function toggleCat(idx, elem) {
+        window.toggleCat = function(idx, elem) {
             document.getElementById('sub-' + idx).classList.toggle('show');
             elem.classList.toggle('active');
         }
 
-        function filterData(subCat, elem) {
-            currentFilter = subCat;
+        window.filterData = function(subCat, elem) {
+            window.currentFilter = subCat;
             document.querySelectorAll('.sub-cat-item').forEach(el => el.classList.remove('active'));
             if(elem) elem.classList.add('active');
             
             document.getElementById('currentViewTag').innerText = subCat;
-            renderCards(promptDB.filter(p => p.subKey === subCat));
+            renderCards(window.promptDB.filter(p => p.subKey === subCat));
 
-            if(window.innerWidth <= 900) toggleSidebar();
+            if(window.innerWidth <= 900) window.toggleSidebar();
         }
 
-        function handleSearch() {
+        window.handleSearch = function() {
             const keyword = document.getElementById('searchInput').value.toLowerCase();
-            document.getElementById('currentViewTag').innerText = keyword ? uiTrans[currentLang].searchResult : uiTrans[currentLang].allPrompts;
+            document.getElementById('currentViewTag').innerText = keyword ? uiTrans[window.currentLang].searchResult : uiTrans[window.currentLang].allPrompts;
             document.querySelectorAll('.sub-cat-item').forEach(el => el.classList.remove('active'));
             
-            const filtered = promptDB.filter(p => {
-                const localized = p.content[currentLang] || p.content['en'];
+            const filtered = window.promptDB.filter(p => {
+                const localized = p.content[window.currentLang] || p.content['en'];
                 return localized.title.toLowerCase().includes(keyword) || localized.prompt.toLowerCase().includes(keyword) || p.subKey.toLowerCase().includes(keyword)
             });
             renderCards(filtered);
@@ -505,45 +498,89 @@
             fr: "\n\n(Instruction importante : Veuillez fournir votre réponse entière en français.)"
         };
 
-        function copyPrompt(id) {
+        window.copyPrompt = function(id) {
             let text = document.getElementById(id).innerText;
-            if (langSuffix[currentLang]) text += langSuffix[currentLang];
+            if (langSuffix[window.currentLang]) text += langSuffix[window.currentLang];
             navigator.clipboard.writeText(text);
             const toast = document.getElementById("toast");
             toast.classList.add("show");
             setTimeout(() => toast.classList.remove("show"), 2000);
         }
 
-        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
+        window.toggleSidebar = function() { document.getElementById('sidebar').classList.toggle('open'); }
 
-        // --- 5. FORMSPREE CONTRIBUTION PANEL ---
         const feedbackPanel = document.getElementById('feedbackPanel');
         
-        function openFeedback(id, mainCat, subCat, promptTitle) {
+        window.openFeedback = function(id, mainCat, subCat, promptTitle) {
             feedbackPanel.classList.add('open');
             
-            let translatedMain = getCatName(mainCat, currentLang);
+            let translatedMain = getCatName(mainCat, window.currentLang);
             document.getElementById('fbBadges').innerHTML = `
                 <span class="b-main">${translatedMain}</span>
                 <span class="b-sub">${subCat}</span>
                 <div class="b-title">Target: ${promptTitle}</div>
             `;
             
-            // Auto-fill hidden inputs
             document.getElementById('formMainCat').value = mainCat;
             document.getElementById('formSubCat').value = subCat;
             document.getElementById('formPromptTitle').value = promptTitle;
-            document.getElementById('formLanguage').value = currentLang.toUpperCase();
+            document.getElementById('formLanguage').value = window.currentLang.toUpperCase();
 
-            // Auto-fill visible inputs
             document.getElementById('autoMajor').value = (mainCat === 'Global Platform') ? '' : translatedMain;
             document.getElementById('autoSubMajor').value = (subCat === 'Nền tảng') ? '' : subCat;
         }
-        function closeFeedback() { feedbackPanel.classList.remove('open'); }
+        window.closeFeedback = function() { feedbackPanel.classList.remove('open'); }
 
-        // START APP
-        renderSidebar();
-        renderCards(promptDB);
+        // Hàm Init sẽ được gọi sau khi Firebase lấy data xong
+        window.initApp = function() {
+            renderSidebar();
+            renderCards(window.promptDB);
+        }
+    </script>
+
+    <!-- FIREBASE KẾT NỐI -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+        // BẢO MẬT: BẠN HÃY DÁN MÃ FIREBASE CONFIG VÀO ĐÂY TRƯỚC KHI CHẠY
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        // Hàm tự động kéo dữ liệu từ Firebase
+        async function fetchPromptsFromCloud() {
+            try {
+                const app = initializeApp(firebaseConfig);
+                const db = getFirestore(app);
+                
+                const querySnapshot = await getDocs(collection(db, "prompts"));
+                const dataFromCloud = [];
+                
+                querySnapshot.forEach((doc) => {
+                    dataFromCloud.push(doc.data());
+                });
+
+                if(dataFromCloud.length > 0) {
+                    window.promptDB = dataFromCloud;
+                    window.initApp(); // Khởi chạy giao diện sau khi có data
+                } else {
+                    document.getElementById('gridContainer').innerHTML = '<div class="loading-overlay">Kho dữ liệu trống. Hãy kiểm tra lại thao tác Upload ở bước trước.</div>';
+                }
+
+            } catch (error) {
+                console.error("Firebase Connection Error:", error);
+                document.getElementById('gridContainer').innerHTML = '<div class="loading-overlay" style="color:var(--gemini-red);">Lỗi kết nối máy chủ Cloud. (Hãy kiểm tra lại mã firebaseConfig trong code)</div>';
+            }
+        }
+
+        // Bắt đầu quy trình hút dữ liệu
+        fetchPromptsFromCloud();
     </script>
 </body>
 </html>
