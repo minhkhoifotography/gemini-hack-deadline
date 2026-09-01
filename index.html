@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Swinburne Quantum Hub | Global AI Prompts</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- GỌI DATABASE TỪ FILE BÊN NGOÀI -->
+    <!-- GỌI DATABASE 410 PROMPTS TỪ FILE BÊN NGOÀI -->
     <script src="database.js"></script>
     <style>
         /* --- CORE VARIABLES & RESET --- */
@@ -215,7 +215,7 @@
                 <p id="ui-hero-desc">Khám phá kho tàng Prompt AI chuyên sâu nhất, được cấu trúc hóa cho từng chuyên ngành hẹp. Giao diện và câu lệnh tự động biên dịch, biến Gemini thành cố vấn chuyên môn Đa ngôn ngữ của bạn.</p>
                 <div class="hero-stats">
                     <span id="statMajors">0 Nhóm ngành lớn</span> • 
-                    <span id="statPrompts">300+ Prompts</span>
+                    <span id="statPrompts">400+ Prompts</span>
                 </div>
             </div>
 
@@ -319,7 +319,7 @@
     <!-- JAVASCRIPT LOGIC -->
     <script>
         if (typeof promptDB === 'undefined') {
-            alert("LỖI: Bạn chưa lưu file database.js! Hãy đảm bảo đã tải file database có chứa 310 prompts để web hoạt động.");
+            alert("LỖI: Bạn chưa lưu file database.js! Hãy đảm bảo đã tải file database có chứa 410 prompts để web hoạt động.");
         }
 
         // --- 1. LOCALIZED DICTIONARY ---
@@ -347,7 +347,9 @@
             "Y Dược & KHTN": { en: "Health & Sciences", zh: "医药与自然科学", de: "Gesundheit & Naturwissenschaften", fr: "Santé et Sciences" },
             "XHNV, Luật & Giáo dục": { en: "Social Sciences & Law", zh: "社会科学与法律", de: "Sozialwissenschaften & Recht", fr: "Sciences Sociales et Droit" },
             "Kiến trúc & Nghệ thuật": { en: "Arts & Architecture", zh: "艺术与建筑", de: "Kunst & Architektur", fr: "Arts et Architecture" },
-            "Nông - Lâm - Môi trường": { en: "Agri & Environment", zh: "农业与环境", de: "Agrar & Umwelt", fr: "Agriculture et Environnement" }
+            "Nông - Lâm - Môi trường": { en: "Agri & Environment", zh: "农业与环境", de: "Agrar & Umwelt", fr: "Agriculture et Environnement" },
+            "Du lịch, Khách sạn & Dịch vụ": { en: "Hospitality & Tourism", zh: "酒店与旅游", de: "Gastgewerbe & Tourismus", fr: "Hôtellerie et Tourisme" },
+            "Khoa học Tiên tiến & Tương lai": { en: "Advanced Sciences", zh: "先进科学", de: "Fortgeschrittene Wissenschaften", fr: "Sciences Avancées" }
         };
 
         let currentLang = 'vi';
@@ -413,7 +415,7 @@
             });
             gridContainer.innerHTML = html;
             document.getElementById('resultCount').innerText = data.length + " Prompts";
-            document.getElementById('statPrompts').innerText = "300+ Prompts"; 
+            document.getElementById('statPrompts').innerText = "400+ Prompts"; 
         }
 
         // --- 3. LANGUAGE & NAVIGATION ---
@@ -463,6 +465,7 @@
             document.getElementById('searchInput').value = '';
             document.querySelectorAll('.sub-cat-item').forEach(el => el.classList.remove('active'));
             changeLang(currentLang, document.querySelector('.lang-btn.active'));
+            document.getElementById('mainContent').scrollTo(0,0);
         }
 
         // --- 4. INTERACTIONS ---
@@ -519,7 +522,6 @@
         function openFeedback(id, mainCat, subCat, promptTitle) {
             feedbackPanel.classList.add('open');
             
-            // Generate visual badges
             let translatedMain = getCatName(mainCat, currentLang);
             document.getElementById('fbBadges').innerHTML = `
                 <span class="b-main">${translatedMain}</span>
@@ -527,14 +529,14 @@
                 <div class="b-title">Target: ${promptTitle}</div>
             `;
             
-            // Auto-fill form fields logic
+            // Auto-fill hidden inputs
             document.getElementById('formMainCat').value = mainCat;
             document.getElementById('formSubCat').value = subCat;
             document.getElementById('formPromptTitle').value = promptTitle;
             document.getElementById('formLanguage').value = currentLang.toUpperCase();
 
-            // Tự động điền trước Ngành và Chuyên Ngành nếu người dùng bấm từ Card
-            document.getElementById('autoMajor').value = (mainCat === 'Global Platform') ? '' : mainCat;
+            // Auto-fill visible inputs
+            document.getElementById('autoMajor').value = (mainCat === 'Global Platform') ? '' : translatedMain;
             document.getElementById('autoSubMajor').value = (subCat === 'Nền tảng') ? '' : subCat;
         }
         function closeFeedback() { feedbackPanel.classList.remove('open'); }
