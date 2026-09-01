@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Swinburne Quantum Hub | Global AI Prompts</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- GỌI DATABASE TỪ FILE BÊN NGOÀI -->
+    <script src="database.js"></script>
     <style>
         /* --- CORE VARIABLES & RESET --- */
         :root {
@@ -26,7 +28,9 @@
         
         body { 
             background-color: var(--bg-base); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; 
-            background-image: linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
             background-size: 40px 40px;
         }
 
@@ -282,6 +286,11 @@
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
+        // KIỂM TRA: Đảm bảo bạn đã lưu file database.js cùng thư mục chứa file HTML này!
+        if (typeof promptDB === 'undefined') {
+            alert("LỖI: Không tìm thấy file database.js. Vui lòng tạo file database.js và nhúng dữ liệu vào như hướng dẫn!");
+        }
+
         // --- 1. LOCALIZED DICTIONARY (UI & CATEGORIES) ---
         const uiTrans = {
             vi: {
@@ -305,58 +314,14 @@
             "Kinh tế & Quản trị": { en: "Business & Management", zh: "经济与管理", de: "Wirtschaft & Management", fr: "Économie et Gestion" },
             "CNTT & Kỹ thuật": { en: "IT & Engineering", zh: "信息技术与工程", de: "IT & Ingenieurwesen", fr: "Informatique et Ingénierie" },
             "Y Dược & KHTN": { en: "Health & Sciences", zh: "医药与自然科学", de: "Gesundheit & Naturwissenschaften", fr: "Santé et Sciences" },
-            "XHNV, Luật & Giáo dục": { en: "Social Sciences & Law", zh: "社会科学与法律", de: "Sozialwissenschaften & Recht", fr: "Sciences Sociales et Droit" }
+            "XHNV, Luật & Giáo dục": { en: "Social Sciences & Law", zh: "社会科学与法律", de: "Sozialwissenschaften & Recht", fr: "Sciences Sociales et Droit" },
+            "Kiến trúc & Nghệ thuật": { en: "Arts & Architecture", zh: "艺术与建筑", de: "Kunst & Architektur", fr: "Arts et Architecture" },
+            "Nông - Lâm - Môi trường": { en: "Agri & Environment", zh: "农业与环境", de: "Agrar & Umwelt", fr: "Agriculture et Environnement" }
         };
-
-        // --- 2. MULTI-LINGUAL PROMPT DATABASE ---
-        // Mỗi prompt giờ đây chứa dữ liệu của 5 ngôn ngữ. Để tối ưu tốc độ, mình demo 4 prompt đại diện.
-        const promptDB = [
-            {
-                id: "biz-1", mainKey: "Kinh tế & Quản trị", subKey: "Digital Marketing", time: "2h",
-                content: {
-                    vi: { title: "Chiến lược Launching 5A", prompt: "Đóng vai CMO, thiết kế chiến lược ra mắt [Sản phẩm] theo mô hình 5A (Kotler). Đề xuất 3 touchpoints trên TikTok, lập ngân sách 70-20-10." },
-                    en: { title: "5A Launching Strategy", prompt: "Act as a CMO. Design a launching strategy for [Product] using Kotler's 5A model. Propose 3 touchpoints on TikTok and plan a 70-20-10 budget." },
-                    zh: { title: "5A 发布策略", prompt: "扮演 CMO。使用科特勒 5A 模型为 [产品] 设计发布策略。在 TikTok 上提出 3 个接触点，并制定 70-20-10 预算计划。" },
-                    de: { title: "5A Einführungsstrategie", prompt: "Agiere als CMO. Entwirf eine Einführungsstrategie für [Produkt] nach dem 5A-Modell. Schlage 3 Touchpoints auf TikTok vor und plane ein 70-20-10 Budget." },
-                    fr: { title: "Stratégie de Lancement 5A", prompt: "Agissez en tant que CMO. Concevez une stratégie de lancement pour [Produit] utilisant le modèle 5A. Proposez 3 points de contact sur TikTok et planifiez un budget 70-20-10." }
-                }
-            },
-            {
-                id: "tech-1", mainKey: "CNTT & Kỹ thuật", subKey: "Software Engineering", time: "2h",
-                content: {
-                    vi: { title: "Debug & Tối ưu Big O", prompt: "Đóng vai Senior Dev. Phân tích đoạn code [Ngôn ngữ]: [Dán Code]. Tìm 'bottleneck' gây Time Limit Exceeded. Tái cấu trúc, tối ưu độ phức tạp thuật toán và giải thích logic." },
-                    en: { title: "Debug & Big O Optimization", prompt: "Act as a Senior Dev. Analyze this [Language] code: [Paste Code]. Find the 'bottleneck' causing Time Limit Exceeded. Refactor, optimize algorithm complexity (Big O), and explain the logic." },
-                    zh: { title: "调试与 Big O 优化", prompt: "扮演高级开发人员。分析此 [语言] 代码：[粘贴代码]。找到导致超时 (TLE) 的瓶颈。重构代码，优化算法复杂度，并解释逻辑。" },
-                    de: { title: "Debug & Big O Optimierung", prompt: "Agiere als Senior Dev. Analysiere diesen [Sprache] Code: [Code einfügen]. Finde den Flaschenhals, der ein Time Limit Exceeded verursacht. Refaktoriere, maximiere die Big O Komplexität und erkläre die Logik." },
-                    fr: { title: "Débogage et Optimisation Big O", prompt: "Agissez comme un Senior Dev. Analysez ce code [Langage] : [Coller le code]. Trouvez le goulot d'étranglement causant le Time Limit Exceeded. Refactorez, optimisez la complexité (Big O) et expliquez la logique." }
-                }
-            },
-            {
-                id: "sci-1", mainKey: "Y Dược & KHTN", subKey: "Medicine", time: "3h",
-                content: {
-                    vi: { title: "Chẩn đoán Phân biệt Y Khoa", prompt: "Phân tích Case lâm sàng: Bệnh nhân [Nam/Nữ, Tuổi], tiền sử [Bệnh], triệu chứng [Mô tả]. Đưa ra 3 chẩn đoán phân biệt, chỉ định cận lâm sàng cần thiết và biện luận y khoa." },
-                    en: { title: "Medical Differential Diagnosis", prompt: "Analyze the clinical case: Patient [M/F, Age], history of [Disease], symptoms [Describe]. Provide 3 differential diagnoses, order necessary subclinical tests, and give medical reasoning." },
-                    zh: { title: "医学鉴别诊断", prompt: "分析临床病例：患者 [男/女，年龄]，病史 [疾病]，症状 [描述]。提供 3 个鉴别诊断，指示必要的辅助检查，并进行医学论证。" },
-                    de: { title: "Medizinische Differentialdiagnose", prompt: "Analysiere den klinischen Fall: Patient [M/W, Alter], Vorgeschichte [Krankheit], Symptome [Beschreiben]. Stelle 3 Differentialdiagnosen, ordne Labortests an und begründe medizinisch." },
-                    fr: { title: "Diagnostic Différentiel Médical", prompt: "Analysez le cas clinique : Patient [H/F, Âge], antécédents [Maladie], symptômes [Décrire]. Donnez 3 diagnostics différentiels, prescrivez les examens nécessaires et justifiez médicalement." }
-                }
-            },
-            {
-                id: "soc-1", mainKey: "XHNV, Luật & Giáo dục", subKey: "Law & Society", time: "2.5h",
-                content: {
-                    vi: { title: "Thẩm định Rủi ro Hợp đồng", prompt: "Đóng vai Luật sư. Thẩm định pháp lý hợp đồng [Loại]: [Dán nội dung]. Xác định 3 lỗ hổng pháp lý rủi ro nhất. Soạn lại các điều khoản để bảo vệ bên [Tên bên]." },
-                    en: { title: "Contract Risk Assessment", prompt: "Act as a Corporate Lawyer. Assess the legal risks of this [Type] contract: [Paste Content]. Identify the top 3 legal loopholes. Draft amended clauses to maximize protection for [Party Name]." },
-                    zh: { title: "合同风险评估", prompt: "扮演公司律师。评估此 [类型] 合同的法律风险：[粘贴内容]。识别排名前 3 的法律漏洞。起草修正条款以最大程度保护 [当事方名称]。" },
-                    de: { title: "Vertragsrisikobewertung", prompt: "Agiere als Unternehmensanwalt. Bewerte die rechtlichen Risiken dieses [Typ] Vertrags: [Inhalt einfügen]. Identifiziere die 3 größten Gesetzeslücken. Entwirf geänderte Klauseln zum Schutz von [Partei]." },
-                    fr: { title: "Évaluation des Risques Contractuels", prompt: "Agissez comme un avocat d'affaires. Évaluez les risques juridiques de ce contrat [Type] : [Coller le contenu]. Identifiez les 3 principales failles. Rédigez des clauses modifiées pour protéger [Partie]." }
-                }
-            }
-        ];
 
         let currentLang = 'vi';
         let currentFilter = 'all';
 
-        // Get Translated Category Name
         function getCatName(mainKey, lang) {
             if(lang === 'vi') return mainKey;
             return catTrans[mainKey] ? catTrans[mainKey][lang] : mainKey;
@@ -380,22 +345,22 @@
                         <div class="sub-cat-list" id="sub-${groupIdx}">
                 `;
                 subs.forEach(sub => {
-                    // Note: In a full app, subKeys would also be in catTrans. Keeping it simple here.
                     treeHTML += `<div class="sub-cat-item" onclick="filterData('${sub}', this)">${sub}</div>`;
                 });
                 treeHTML += `</div></div>`;
                 groupIdx++;
             }
             document.getElementById('treeNav').innerHTML = treeHTML;
-            document.getElementById('statMajors').innerText = Object.keys(treeData).length + (currentLang === 'vi' ? " Nhóm ngành" : " Categories");
+            document.getElementById('statMajors').innerText = Object.keys(treeData).length + (currentLang === 'vi' ? " Nhóm ngành lớn" : " Categories");
         }
 
         function renderCards(data) {
             const gridContainer = document.getElementById('gridContainer');
             let html = "";
             data.forEach((p) => {
-                const localizedContent = p.content[currentLang];
-                const translatedMain = getCatName(p.mainKey, currentLang);
+                // Safety check if language data exists, fallback to English then Vietnamese
+                let localizedContent = p.content[currentLang] || p.content['en'] || p.content['vi'];
+                let translatedMain = getCatName(p.mainKey, currentLang);
                 
                 html += `
                     <div class="card">
@@ -418,7 +383,8 @@
             });
             gridContainer.innerHTML = html;
             document.getElementById('resultCount').innerText = data.length + " Prompts";
-            document.getElementById('statPrompts').innerText = promptDB.length + "+ Prompts";
+            // Lấy độ lớn thực sự của file DB bên ngoài để làm thông số
+            document.getElementById('statPrompts').innerText = "200+ Prompts"; 
         }
 
         // --- 4. LANGUAGE SWITCHER ---
@@ -427,7 +393,6 @@
             document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
             btnElem.classList.add('active');
 
-            // Update UI Texts
             document.getElementById('ui-hero-badge').innerHTML = uiTrans[lang].badge;
             document.getElementById('ui-hero-title').innerHTML = uiTrans[lang].title;
             document.getElementById('ui-hero-desc').innerHTML = uiTrans[lang].desc;
@@ -436,22 +401,18 @@
             document.getElementById('ui-footer-desc').innerHTML = uiTrans[lang].footerDesc;
             document.getElementById('toast').innerHTML = uiTrans[lang].toast;
             
-            // Footer Dev Info
             document.getElementById('ui-dev-role').innerText = uiTrans[lang].devRole;
             document.getElementById('ui-dev-title').innerText = uiTrans[lang].devTitle;
             document.getElementById('ui-dev-sub').innerText = uiTrans[lang].devSub;
 
-            // Feedback UI
             document.getElementById('ui-fb-title').innerHTML = `<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg> ${uiTrans[lang].fbTitle}`;
             document.getElementById('ui-fb-desc').innerHTML = uiTrans[lang].fbDesc;
             document.getElementById('ui-fb-name').innerHTML = uiTrans[lang].fbName;
             document.getElementById('ui-fb-content').innerHTML = uiTrans[lang].fbContent;
             document.getElementById('ui-fb-btn').innerHTML = `${uiTrans[lang].fbBtn} <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>`;
 
-            // Update View Tag
             document.getElementById('currentViewTag').innerText = currentFilter === 'all' ? uiTrans[lang].allPrompts : currentFilter;
 
-            // Re-render Data
             renderSidebar();
             if(currentFilter === 'all') {
                 renderCards(promptDB);
@@ -483,7 +444,7 @@
             document.querySelectorAll('.sub-cat-item').forEach(el => el.classList.remove('active'));
             
             const filtered = promptDB.filter(p => {
-                const localized = p.content[currentLang];
+                const localized = p.content[currentLang] || p.content['en'];
                 return localized.title.toLowerCase().includes(keyword) || localized.prompt.toLowerCase().includes(keyword) || p.subKey.toLowerCase().includes(keyword)
             });
             renderCards(filtered);
@@ -509,7 +470,6 @@
                 <span class="b-sub">${subCat}</span>
                 <div class="b-title">Target: ${promptTitle}</div>
             `;
-            // Điền dữ liệu ẩn để gửi Formspree phân cột
             document.getElementById('formMainCat').value = mainCat;
             document.getElementById('formSubCat').value = subCat;
             document.getElementById('formPromptTitle').value = promptTitle;
