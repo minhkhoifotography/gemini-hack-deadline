@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swinburne Quantum Prompts - Hack Your Deadline</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Styling - Modern & Quiet Luxury */
+        :root {
+            --bg-color: #050505;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --text-main: #f5f5f7;
+            --text-muted: #a1a1a6;
+            --gemini-gradient: linear-gradient(135deg, #4285F4 0%, #9B72CB 50%, #D96570 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        /* Header Section */
+        .header {
+            text-align: center;
+            max-width: 800px;
+            margin-bottom: 50px;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            letter-spacing: -0.5px;
+        }
+
+        .gradient-text {
+            background: var(--gemini-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            font-weight: 300;
+        }
+
+        /* Instructions */
+        .steps {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 50px;
+            flex-wrap: wrap;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--card-bg);
+            padding: 10px 20px;
+            border-radius: 50px;
+            border: 1px solid var(--card-border);
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .step-number {
+            background: var(--text-main);
+            color: var(--bg-color);
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 0.8rem;
+        }
+
+        /* Prompt Grid */
+        .prompt-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+            width: 100%;
+            max-width: 1100px;
+            margin-bottom: 60px;
+        }
+
+        .prompt-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 30px;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            backdrop-filter: blur(10px);
+        }
+
+        .prompt-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .prompt-text {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            border-radius: 8px;
+            color: var(--text-muted);
+            font-family: monospace;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            flex-grow: 1;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .copy-btn {
+            background: transparent;
+            color: var(--text-main);
+            border: 1px solid var(--card-border);
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .copy-btn:hover {
+            background: var(--text-main);
+            color: var(--bg-color);
+        }
+
+        .copy-btn.copied {
+            background: var(--gemini-gradient);
+            color: white;
+            border: none;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            border-top: 1px solid var(--card-border);
+            padding-top: 20px;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Welcome to <span class="gradient-text">Swinburne Quantum Prompts</span></h1>
+        <p>Hack Your Deadline cùng Gemini - Giải pháp AI tối ưu dành riêng cho thế hệ K8</p>
+    </div>
+
+    <div class="steps">
+        <div class="step-item"><span class="step-number">1</span> Chọn ngành học</div>
+        <div class="step-item"><span class="step-number">2</span> Copy câu lệnh</div>
+        <div class="step-item"><span class="step-number">3</span> Dán vào Gemini & Điền [...] </div>
+    </div>
+
+    <div class="prompt-container">
+        <!-- Card 1: Business & Media -->
+        <div class="prompt-card">
+            <div class="card-header">
+                <span style="font-size: 1.5rem;">📊</span>
+                <div class="card-title">Kinh tế & Truyền thông</div>
+            </div>
+            <div class="prompt-text" id="prompt-business">
+                Đóng vai một Giám đốc Digital Marketing thực chiến, hãy lập khung chiến lược 3 giai đoạn cho chiến dịch ra mắt [Tên sản phẩm/dự án]. Yêu cầu: Áp dụng mô hình [Tên mô hình: AIDA/SWOT...], tối ưu ngân sách trên nền tảng [Tiktok/Facebook] và đề xuất 2 ý tưởng Marketing Du kích.
+            </div>
+            <button class="copy-btn" onclick="copyPrompt('prompt-business', this)">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                Copy Prompt
+            </button>
+        </div>
+
+        <!-- Card 2: IT / Computer Science -->
+        <div class="prompt-card">
+            <div class="card-header">
+                <span style="font-size: 1.5rem;">💻</span>
+                <div class="card-title">Công nghệ Thông tin</div>
+            </div>
+            <div class="prompt-text" id="prompt-it">
+                Đóng vai một Senior Developer, hãy phân tích đoạn code C++ sau của tôi: [Dán code vào đây]. Tìm ra 'nút thắt cổ chai' khiến code bị lỗi Time Limit Exceeded, tối ưu hóa độ phức tạp thuật toán và giải thích logic sửa đổi một cách ngắn gọn.
+            </div>
+            <button class="copy-btn" onclick="copyPrompt('prompt-it', this)">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                Copy Prompt
+            </button>
+        </div>
+
+        <!-- Card 3: Academic Writing -->
+        <div class="prompt-card">
+            <div class="card-header">
+                <span style="font-size: 1.5rem;">🎓</span>
+                <div class="card-title">Kỹ năng Học thuật</div>
+            </div>
+            <div class="prompt-text" id="prompt-academic">
+                Hãy nâng cấp đoạn văn bản tiếng Anh thô sau đây thành giọng văn học thuật (Academic Tone) chuẩn đại học: [Dán văn bản]. Yêu cầu: Dùng cấu trúc câu phức, từ vựng chuyên ngành [Tên chuyên ngành] và giữ văn phong khách quan.
+            </div>
+            <button class="copy-btn" onclick="copyPrompt('prompt-academic', this)">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                Copy Prompt
+            </button>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>Initiated by <strong>Lưu Minh Khôi</strong> - Candidate for Google Student Ambassador 2026</p>
+    </div>
+
+    <!-- JavaScript for Copy Functionality -->
+    <script>
+        function copyPrompt(elementId, buttonElement) {
+            // Get the text from the prompt container
+            const textToCopy = document.getElementById(elementId).innerText;
+            
+            // Copy to clipboard
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                // Change button state to show success
+                const originalContent = buttonElement.innerHTML;
+                buttonElement.innerHTML = '✓ Copied!';
+                buttonElement.classList.add('copied');
+                
+                // Revert back after 2 seconds
+                setTimeout(() => {
+                    buttonElement.innerHTML = originalContent;
+                    buttonElement.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy text: ', err);
+            });
+        }
+    </script>
+</body>
+</html>
