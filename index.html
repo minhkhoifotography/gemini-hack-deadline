@@ -556,30 +556,34 @@
 
         // Hàm tự động kéo dữ liệu từ Firebase
         async function fetchPromptsFromCloud() {
-            try {
-                const app = initializeApp(firebaseConfig);
-                const db = getFirestore(app);
-                
-                const querySnapshot = await getDocs(collection(db, "prompts"));
-                const dataFromCloud = [];
-                
-                querySnapshot.forEach((doc) => {
-                    dataFromCloud.push(doc.data());
-                });
+    // 1. Kiểm tra xem máy đã lưu cache chưa
+    const cachedData = localStorage.getItem('quantum_prompts_cache');
+    if (cachedData) {
+        window.promptDB = JSON.parse(cachedData);
+        window.initApp();
+        return;
+    }
 
-                if(dataFromCloud.length > 0) {
-                    window.promptDB = dataFromCloud;
-                    window.initApp(); // Khởi chạy giao diện sau khi có data
-                } else {
-                    document.getElementById('gridContainer').innerHTML = '<div class="loading-overlay">Kho dữ liệu trống. Hãy kiểm tra lại thao tác Upload ở bước trước.</div>';
-                }
+    // 2. Nếu chưa có thì mới kéo từ Firebase
+    try {
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const querySnapshot = await getDocs(collection(db, "prompts"));
+        const dataFromCloud = [];
 
-            } catch (error) {
-                console.error("Firebase Connection Error:", error);
-                document.getElementById('gridContainer').innerHTML = '<div class="loading-overlay" style="color:var(--gemini-red);">Lỗi kết nối máy chủ Cloud. (Hãy kiểm tra lại mã firebaseConfig trong code)</div>';
-            }
+        querySnapshot.forEach((doc) => {
+            dataFromCloud.push(doc.data());
+        });
+
+        if(dataFromCloud.length > 0) {
+            window.promptDB = dataFromCloud;
+            localStorage.setItem('quantum_prompts_cache', JSON.stringify(dataFromCloud)); // Lưu cache
+            window.initApp();
         }
-
+    } catch (error) {
+        console.error("Error:", error);
+    }
+}
         // Bắt đầu quy trình hút dữ liệu
         fetchPromptsFromCloud();
     </script>
