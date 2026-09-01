@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Auto Uploader - Swinburne Quantum</title>
+    <!-- Gọi file database.js chứa 410 prompt của bạn vào đây -->
+    <script src="database.js"></script> 
+</head>
+<body style="font-family: Arial, sans-serif; background: #111; color: white; padding: 50px;">
+
+    <h1>🚀 Đang bắn 410+ Prompts lên Firestore...</h1>
+    <p>Vui lòng không đóng trình duyệt. Nhấn <b>F12</b> mở tab <b>Console</b> để xem tiến độ chạy chi tiết.</p>
+    <h2 id="status" style="color: #4285F4;">Khởi tạo hệ thống...</h2>
+
+    <!-- Script kết nối Firebase -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+        // BẠN HÃY DÁN MÃ FIREBASE CONFIG LẤY Ở BƯỚC 1 VÀO ĐÂY:
+        const firebaseConfig = {
+            apiKey: "DÁN_CỦA_BẠN_VÀO_ĐÂY",
+            authDomain: "DÁN_CỦA_BẠN_VÀO_ĐÂY",
+            projectId: "DÁN_CỦA_BẠN_VÀO_ĐÂY",
+            storageBucket: "DÁN_CỦA_BẠN_VÀO_ĐÂY",
+            messagingSenderId: "DÁN_CỦA_BẠN_VÀO_ĐÂY",
+            appId: "DÁN_CỦA_BẠN_VÀO_ĐÂY"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const statusText = document.getElementById("status");
+
+        async function uploadData() {
+            if (typeof promptDB === 'undefined' || promptDB.length === 0) {
+                statusText.innerHTML = "❌ LỖI: Không tìm thấy dữ liệu trong database.js!";
+                statusText.style.color = "red";
+                return;
+            }
+
+            statusText.innerHTML = `Đang xử lý đẩy ${promptDB.length} documents...`;
+
+            for (let i = 0; i < promptDB.length; i++) {
+                const prompt = promptDB[i];
+                try {
+                    // Tạo một Collection tên là "prompts", dùng chính id (p-1, p-2...) làm tên Document
+                    await setDoc(doc(db, "prompts", prompt.id), prompt);
+                    console.log(`✅ Đã đẩy thành công: ${prompt.id}`);
+                } catch (e) {
+                    console.error(`❌ Lỗi ở ${prompt.id}: `, e);
+                }
+            }
+            
+            statusText.innerHTML = "🎉 HOÀN TẤT 100%! TẤT CẢ DỮ LIỆU ĐÃ LÊN MÂY!";
+            statusText.style.color = "#34A853";
+            console.log("XONG! BẠN CÓ THỂ QUAY LẠI FIREBASE ĐỂ KIỂM TRA.");
+        }
+
+        // Bắt đầu chạy
+        uploadData();
+    </script>
+</body>
+</html>
