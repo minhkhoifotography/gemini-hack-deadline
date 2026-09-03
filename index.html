@@ -381,15 +381,27 @@
             document.getElementById('statMajors').innerText = Object.keys(treeData).length + uiTrans[window.currentLang].statMajors;
         }
 
-        function renderCards(data) {
+        // Thêm biến theo dõi số lượng thẻ trên màn hình
+        let currentRenderCount = 50; 
+
+        function renderCards(data, isLoadMore = false) {
+            // Nếu là thao tác đổi ngôn ngữ, search hoặc lọc ngành: Reset lại hiển thị 50 thẻ
+            if (!isLoadMore) {
+                currentRenderCount = 50;
+            }
+
             const gridContainer = document.getElementById('gridContainer');
             if (data.length === 0) {
                 gridContainer.innerHTML = '<div class="loading-overlay">Không tìm thấy dữ liệu.</div>';
+                document.getElementById('resultCount').innerText = "0 Prompts";
                 return;
             }
             
+            // THUẬT TOÁN LAZY LOAD: Chỉ cắt lấy số lượng item theo biến currentRenderCount
+            const dataToRender = data.slice(0, currentRenderCount); 
+
             let html = "";
-            data.forEach((p) => {
+            dataToRender.forEach((p) => {
                 let localizedContent = p.content[window.currentLang] || p.content['en'] || p.content['vi'];
                 let translatedMain = getCatName(p.mainKey, window.currentLang);
                 
@@ -412,7 +424,30 @@
                     </div>
                 `;
             });
+            
             gridContainer.innerHTML = html;
+
+            // KIẾN TẠO NÚT "XEM THÊM" NẾU CÒN DỮ LIỆU
+            if (currentRenderCount < data.length) {
+                const loadMoreWrapper = document.createElement('div');
+                loadMoreWrapper.style.gridColumn = "1 / -1"; // Ép nút dàn đều khung Grid
+                loadMoreWrapper.style.textAlign = "center";
+                loadMoreWrapper.style.marginTop = "10px";
+                
+                loadMoreWrapper.innerHTML = `
+                    <button id="btnLoadMore" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); color: white; padding: 10px 24px; border-radius: 30px; cursor: pointer; font-weight: 600; font-size: 0.85rem; transition: all 0.3s;">
+                        ⬇️ Tải thêm Prompts (${currentRenderCount} / ${data.length})
+                    </button>
+                `;
+                gridContainer.appendChild(loadMoreWrapper);
+
+                // Kích hoạt cơ chế nạp thêm khi bấm nút
+                document.getElementById('btnLoadMore').onclick = function() {
+                    currentRenderCount += 50; 
+                    renderCards(data, true); 
+                };
+            }
+
             document.getElementById('resultCount').innerText = data.length + " Prompts";
             document.getElementById('statPrompts').innerText = window.promptDB.length + "+ Prompts"; 
         }
