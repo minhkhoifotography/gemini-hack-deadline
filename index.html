@@ -557,31 +557,43 @@
         // Hàm tự động kéo dữ liệu từ Firebase
         async function fetchPromptsFromCloud() {
     // 1. Kiểm tra xem máy đã lưu cache chưa
-    const cachedData = localStorage.getItem('quantum_prompts_cache');
-    if (cachedData) {
-        window.promptDB = JSON.parse(cachedData);
-        window.initApp();
-        return;
+    try {
+        const cachedData = localStorage.getItem('quantum_prompts_cache');
+        if (cachedData) {
+            window.promptDB = JSON.parse(cachedData);
+            window.initApp();
+            return;
+        }
+    } catch(e) {
+        console.warn("Lỗi đọc cache:", e);
     }
 
-    // 2. Nếu chưa có thì mới kéo từ Firebase
+    // 2. Kéo từ Firebase nếu chưa có cache
     try {
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const querySnapshot = await getDocs(collection(db, "prompts"));
         const dataFromCloud = [];
-
+        
         querySnapshot.forEach((doc) => {
             dataFromCloud.push(doc.data());
         });
 
         if(dataFromCloud.length > 0) {
             window.promptDB = dataFromCloud;
-            localStorage.setItem('quantum_prompts_cache', JSON.stringify(dataFromCloud)); // Lưu cache
+            
+            // XỬ LÝ LỖI TRÀN BỘ NHỚ (>5MB):
+            try {
+                localStorage.setItem('quantum_prompts_cache', JSON.stringify(dataFromCloud));
+            } catch (storageError) {
+                console.warn("⚠️ Dữ liệu siêu khủng (>5MB), bỏ qua lưu Cache cục bộ để chống sập web.");
+            }
+
+            // Gọi hàm render giao diện
             window.initApp();
         }
     } catch (error) {
-        console.error("Error:", error);
+        console.error("Lỗi Firebase:", error);
     }
 }
         // Bắt đầu quy trình hút dữ liệu
