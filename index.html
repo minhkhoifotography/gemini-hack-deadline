@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <script src="database_v7.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Swinburne Quantum Hub | Global AI Prompts</title>
+    <!-- GỌI DỮ LIỆU DỰ PHÒNG -->
+    <script src="database_v7.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- KHÔNG CẦN GỌI DATABASE.JS NỮA, DỮ LIỆU SẼ ĐƯỢC KÉO TỪ CLOUD -->
     <style>
         /* --- CORE VARIABLES & RESET --- */
         :root {
@@ -574,57 +574,65 @@
         }
     </script>
 
-  <!-- FIREBASE KẾT NỐI: TÍCH HỢP INDEXED-DB VÀ OFFLINE FALLBACK -->
+    <!-- FIREBASE KẾT NỐI -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-        // MÃ FIREBASE CỦA BẠN
-        const firebaseConfig = {
-            apiKey: "AIzaSyBy88btHa9752zNFjX8SctOGpTtdzMu0iM",
-            authDomain: "gemini-hack-deadline.firebaseapp.com",
-            projectId: "gemini-hack-deadline",
-            storageBucket: "gemini-hack-deadline.firebasestorage.app",
-            messagingSenderId: "816450259202",
-            appId: "1:816450259202:web:7b26b60cf05d263b215a1b",
-            measurementId: "G-C90XEY1QGF"
-        };
+        // BẢO MẬT: BẠN HÃY DÁN MÃ FIREBASE CONFIG VÀO ĐÂY TRƯỚC KHI CHẠY
+       const firebaseConfig = {
+  apiKey: "AIzaSyBy88btHa9752zNFjX8SctOGpTtdzMu0iM",
+  authDomain: "gemini-hack-deadline.firebaseapp.com",
+  projectId: "gemini-hack-deadline",
+  storageBucket: "gemini-hack-deadline.firebasestorage.app",
+  messagingSenderId: "816450259202",
+  appId: "1:816450259202:web:7b26b60cf05d263b215a1b",
+  measurementId: "G-C90XEY1QGF"
+};
 
+        // Hàm tự động kéo dữ liệu từ Firebase
+        async function fetchPromptsFromCloud() {
+    // 1. Kiểm tra xem máy đã lưu cache chưa
+    try {
+        const cachedData = localStorage.getItem('quantum_prompts_cache');
+        if (cachedData) {
+            window.promptDB = JSON.parse(cachedData);
+            window.initApp();
+            return;
+        }
+    } catch(e) {
+        console.warn("Lỗi đọc cache:", e);
+    }
+
+    // 2. Kéo từ Firebase nếu chưa có cache
+    try {
         const app = initializeApp(firebaseConfig);
-
-        // KÍCH HOẠT BỘ NHỚ ĐỆM CẤP CAO (INDEXED-DB)
-        const db = initializeFirestore(app, {
-            localCache: persistentLocalCache({tabManager: persistentMultipleTabManager()})
+        const db = getFirestore(app);
+        const querySnapshot = await getDocs(collection(db, "prompts"));
+        const dataFromCloud = [];
+        
+        querySnapshot.forEach((doc) => {
+            dataFromCloud.push(doc.data());
         });
 
-        async function fetchPromptsFromCloud() {
+        if(dataFromCloud.length > 0) {
+            window.promptDB = dataFromCloud;
+            
+            // XỬ LÝ LỖI TRÀN BỘ NHỚ (>5MB):
             try {
-                const querySnapshot = await getDocs(collection(db, "prompts"));
-                const dataFromCloud = [];
-                
-                querySnapshot.forEach((doc) => {
-                    dataFromCloud.push(doc.data());
-                });
-
-                if(dataFromCloud.length > 0) {
-                    window.promptDB = dataFromCloud;
-                    window.initApp(); 
-                    console.log("✅ Dữ liệu tải từ Firebase / IndexedDB thành công!");
-                }
-            } catch (error) {
-                console.warn("⚠️ Firebase bị lỗi hoặc hết Quota. Đang chuyển sang Chế độ Offline Fallback...");
-                
-                // GỌI DỮ LIỆU DỰ PHÒNG KHÔNG CẦN MẠNG
-                if (typeof promptDB !== 'undefined' && promptDB.length > 0) {
-                    window.promptDB = promptDB;
-                    window.initApp();
-                    console.log("🛡️ Đã dùng dữ liệu dự phòng. Trang web vẫn sống!");
-                } else {
-                    document.getElementById('gridContainer').innerHTML = '<div class="loading-overlay">Lỗi kết nối. Vui lòng thử lại sau!</div>';
-                }
+                localStorage.setItem('quantum_prompts_cache', JSON.stringify(dataFromCloud));
+            } catch (storageError) {
+                console.warn("⚠️ Dữ liệu siêu khủng (>5MB), bỏ qua lưu Cache cục bộ để chống sập web.");
             }
+
+            // Gọi hàm render giao diện
+            window.initApp();
         }
-        
+    } catch (error) {
+        console.error("Lỗi Firebase:", error);
+    }
+}
+        // Bắt đầu quy trình hút dữ liệu
         fetchPromptsFromCloud();
     </script>
 </body>
