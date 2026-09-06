@@ -590,13 +590,10 @@
   measurementId: "G-C90XEY1QGF"
 };
 
-       <!-- FIREBASE KẾT NỐI: TÍCH HỢP INDEXED-DB VÀ OFFLINE FALLBACK -->
-    <script type="module">
+       <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        // Gọi thêm hàm initializeFirestore và persistentLocalCache
         import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-        // DÁN MÃ FIREBASE CONFIG CỦA BẠN VÀO ĐÂY
         const firebaseConfig = {
             apiKey: "AIzaSyBy88btHa9752zNFjX8SctOGpTtdzMu0iM",
             authDomain: "gemini-hack-deadline.firebaseapp.com",
@@ -616,9 +613,6 @@
 
         async function fetchPromptsFromCloud() {
             try {
-                // Nhờ bật Cache ở trên, Firebase sẽ ƯU TIÊN tìm trong máy trước.
-                // Nếu có, nó lấy ra ngay lập tức (Tốn 0 lượt Read). 
-                // Nếu chưa có, nó mới lên mây tải về và tự động lưu vào máy.
                 const querySnapshot = await getDocs(collection(db, "prompts"));
                 const dataFromCloud = [];
                 
@@ -632,10 +626,8 @@
                     console.log("✅ Dữ liệu tải từ Firebase / IndexedDB thành công!");
                 }
             } catch (error) {
-                // CHẾ ĐỘ BẤT TỬ: Nếu Firebase báo lỗi (Hết Quota, 404, Đứt mạng...)
                 console.warn("⚠️ Firebase bị lỗi hoặc hết Quota. Đang chuyển sang Chế độ Offline...");
                 
-                // Lấy ngay dữ liệu từ file database_v7.js để thế mạng
                 if (typeof promptDB !== 'undefined' && promptDB.length > 0) {
                     window.promptDB = promptDB;
                     window.initApp();
